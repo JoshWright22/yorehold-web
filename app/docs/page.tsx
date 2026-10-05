@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHead } from "@/components/ui";
 import { loadDocs } from "@/lib/docs";
 
 export const metadata: Metadata = { title: "Docs" };
@@ -12,7 +13,7 @@ export default async function Docs() {
   if (docs.length === 0) {
     return (
       <>
-        <h1>Docs</h1>
+        <PageHead title="Docs" kicker="For writers" />
         <p className="notice">The format docs weren&apos;t there when this site was built.</p>
       </>
     );
@@ -20,26 +21,31 @@ export default async function Docs() {
 
   return (
     <>
-      <h1>Docs</h1>
-      <p className="muted">How content files are written. These are the same documents that ship with the game.</p>
-      <nav aria-label="Documents">
-        <ul className="tags">
+      <PageHead title="Docs" kicker="For writers">
+        <p className="muted">How content files are written. These are the same documents that ship with the game.</p>
+      </PageHead>
+      <div className="docs-layout">
+        <nav className="docs-nav" aria-label="Documents">
+          <h2>Documents</h2>
+          <ul>
+            {docs.map((doc) => (
+              <li key={doc.slug}>
+                <a href={"#" + doc.slug}>{doc.title}</a>
+                <span className="docs-source">{doc.source}</span>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="docs-body">
           {docs.map((doc) => (
-            <li key={doc.slug}>
-              <a href={"#" + doc.slug}>{doc.title}</a>
-            </li>
+            <section key={doc.slug} id={doc.slug} className="doc">
+              <p className="kicker">{doc.source}</p>
+              {/* The text comes from this project's own repos at build time, not from visitors. */}
+              <div className="markdown" dangerouslySetInnerHTML={{ __html: doc.html }} />
+            </section>
           ))}
-        </ul>
-      </nav>
-      {docs.map((doc) => (
-        <section key={doc.slug} id={doc.slug} className="doc">
-          <p className="meta">
-            <span>{doc.source}</span>
-          </p>
-          {/* The text comes from this project's own repos at build time, not from visitors. */}
-          <div className="markdown" dangerouslySetInnerHTML={{ __html: doc.html }} />
-        </section>
-      ))}
+        </div>
+      </div>
     </>
   );
 }

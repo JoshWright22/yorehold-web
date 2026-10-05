@@ -17,28 +17,35 @@ function partyLine(completion: Completion): string {
 }
 
 export default function CompletionList({ completions, empty }: { completions: Completion[]; empty: string }) {
-  if (completions.length === 0) return <p className="muted">{empty}</p>;
+  if (completions.length === 0) return <p className="empty">{empty}</p>;
   return (
-    <ul className="completion-list">
-      {completions.map((completion) => {
-        const party = partyLine(completion);
-        return (
-          <li key={completion.adventure} className="card">
-            <div className="card-body">
-              <h3>
+    <div className="table-wrap">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Adventure</th>
+            <th>Finished</th>
+            <th className="wide">Difficulty</th>
+            <th className="numeric">Rev</th>
+            <th className="numeric">Times</th>
+            <th className="wide">Party</th>
+          </tr>
+        </thead>
+        <tbody>
+          {completions.map((completion) => (
+            <tr key={completion.adventure}>
+              <td className="name-cell">
                 <Link href={"/c/" + encodeURIComponent(completion.adventure)}>{completion.adventure}</Link>
-              </h3>
-              <p className="meta">
-                <span>finished {date(completion.completedAt)}</span>
-                {completion.difficulty ? <span>{completion.difficulty}</span> : null}
-                <span>revision {completion.revision}</span>
-                {completion.times > 1 ? <span>{completion.times} times</span> : null}
-              </p>
-              {party ? <p className="summary">{party}</p> : null}
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+              </td>
+              <td className="num">{date(completion.completedAt)}</td>
+              <td className="wide">{completion.difficulty || <span className="dash">-</span>}</td>
+              <td className="numeric num">{completion.revision}</td>
+              <td className="numeric num">{completion.times}</td>
+              <td className="wide">{partyLine(completion) || <span className="dash">-</span>}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

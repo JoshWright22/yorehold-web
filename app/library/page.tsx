@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import ContentList from "@/components/ContentList";
+import Browser from "@/components/Browser";
 import { FailureNotice } from "@/components/Notice";
+import { FilterBar, PageHead, TabBar } from "@/components/ui";
 import { first } from "@/lib/format";
+import { contentColumns, contentRow } from "@/lib/rows";
 import { contentKinds, contentSearch, contentSorts, type ContentKind, type ContentSort } from "@/lib/server";
 
 export const metadata: Metadata = { title: "Library" };
 
 const pageSize = 20;
+
+const kindLabels: { [kind in ContentKind]: string } = {
+  adventure: "Adventures",
+  ruleset: "Rulesets",
+  definitions: "Definitions",
+};
 
 type Query = { [key: string]: string | string[] | undefined };
 
@@ -33,71 +41,81 @@ export default async function Library({ searchParams }: { searchParams: Promise<
 
   const result = await contentSearch({ kind, tag, text, levelMin, levelMax, sort, limit: pageSize, cursor });
 
-  // The same search with a different page.
-  const pageHref = (pageCursor: string) => {
+  // The same search with a different page or kind.
+  const href = (change: { cursor?: string; kind?: ContentKind | "" }) => {
     const params = new URLSearchParams();
-    if (kind) params.set("kind", kind);
+    const shownKind = change.kind === undefined ? kind : change.kind;
+    if (shownKind) params.set("kind", shownKind);
     if (tag) params.set("tag", tag);
     if (text) params.set("q", text);
     if (levelMin) params.set("min", String(levelMin));
     if (levelMax) params.set("max", String(levelMax));
     if (sort !== "score") params.set("sort", sort);
-    if (pageCursor) params.set("cursor", pageCursor);
+    if (change.cursor) params.set("cursor", change.cursor);
     const built = params.toString();
     return built ? "/library?" + built : "/library";
   };
 
+  const tabs = [
+    { href: href({ kind: "" }), label: "All", active: !kind },
+    ...contentKinds.map((option) => ({ href: href({ kind: option }), label: kindLabels[option], active: kind === option })),
+  ];
+
   return (
     <>
-      <h1>Library</h1>
+      <PageHead title="Library" kicker="Made by players">
+        <p className="muted">
+          Adventures, rulesets and definitions shared by players. The game&apos;s own content is in the{" "}
+          <Link href="/compendium">compendium</Link>.
+        </p>
+      </PageHead>
 
-      <form method="get" action="/library" className="filters">
-        <label>
-          Search
-          <input type="search" name="q" defaultValue={text} placeholder="Name or description" maxLength={100} />
-        </label>
-        <label>
-          Kind
-          <select name="kind" defaultValue={kind ?? ""}>
-            <option value="">Any</option>
-            {contentKinds.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Tag
-          <input type="text" name="tag" defaultValue={tag} placeholder="dungeon" maxLength={32} pattern="[a-z0-9\-]*" />
-        </label>
-        <label>
-          Level from
-          <input type="number" name="min" defaultValue={levelMin ?? ""} min={1} max={100} />
-        </label>
-        <label>
-          to
-          <input type="number" name="max" defaultValue={levelMax ?? ""} min={1} max={100} />
-        </label>
-        <label>
-          Sort by
-          <select name="sort" defaultValue={sort}>
-            <option value="score">Score</option>
-            <option value="new">Newest</option>
-            <option value="name">Name</option>
-          </select>
-        </label>
-        <button type="submit" className="button">
-          Search
-        </button>
+      <TabBar tabs={tabs} label="Kinds of content" />
+
+      <form method="get" action="/library" className="search-form">
+        {kind ? <input type="hidden" name="kind" value={kind} /> : null}
+        <FilterBar>
+          <label className="filter-field grow">
+            <span>Search</span>
+            <input type="search" name="q" defaultValue={text} placeholder="Name or description" maxLength={100} />
+          </label>
+          <label className="filter-field">
+            <span>Tag</span>
+            <input type="text" name="tag" defaultValue={tag} placeholder="dungeon" maxLength={32} pattern="[a-z0-9\-]*" />
+          </label>
+          <label className="filter-field short">
+            <span>Lvl from</span>
+            <input type="number" name="min" defaultValue={levelMin ?? ""} min={1} max={100} />
+          </label>
+          <label className="filter-field short">
+            <span>to</span>
+            <input type="number" name="max" defaultValue={levelMax ?? ""} min={1} max={100} />
+          </label>
+          <label className="filter-field">
+            <span>Order</span>
+            <select name="sort" defaultValue={sort}>
+              <option value="score">Score</option>
+              <option value="new">Newest</option>
+              <option value="name">Name</option>
+            </select>
+          </label>
+          <button type="submit" className="button primary">
+            Search
+          </button>
+        </FilterBar>
       </form>
 
       {result.ok ? (
         <>
-          <ContentList items={result.data.content} empty="Nothing matches that search." />
+          <Browser
+            rows={result.data.content.map(contentRow)}
+            columns={contentColumns}
+            empty="Nothing matches that search."
+            placeholder="Filter this page"
+          />
           <nav className="pager" aria-label="Pages">
-            {cursor ? <Link href={pageHref("")}>First page</Link> : <span />}
-            {result.data.cursor ? <Link href={pageHref(result.data.cursor)}>Next page</Link> : <span />}
+            {cursor ? <Link href={href({ cursor: "" })}>First page</Link> : <span />}
+            {result.data.cursor ? <Link href={href({ cursor: result.data.cursor })}>Next page</Link> : <span />}
           </nav>
         </>
       ) : (

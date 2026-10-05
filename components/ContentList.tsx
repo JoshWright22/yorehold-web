@@ -1,41 +1,41 @@
 import Link from "next/link";
 import type { ContentItem } from "@/lib/server";
 import { levelRange, profileHref, score } from "@/lib/format";
+import { Card, Chip } from "./ui";
 
 export default function ContentList({ items, empty }: { items: ContentItem[]; empty: string }) {
-  if (items.length === 0) return <p className="muted">{empty}</p>;
+  if (items.length === 0) return <p className="empty">{empty}</p>;
   return (
-    <ul className="content-list">
+    <div className="card-grid">
       {items.map((item) => (
-        <li key={item.id} className="card">
-          <div className="card-score" title={item.votesUp + " up, " + item.votesDown + " down"}>
-            {score(item.score)}
-          </div>
-          <div className="card-body">
-            <h3>
-              <Link href={"/c/" + encodeURIComponent(item.id)}>{item.name}</Link>
-            </h3>
-            <p className="meta">
-              <span className="kind">{item.kind}</span>
-              <span>{levelRange(item)}</span>
-              <span>
-                by <Link href={profileHref(item.author)}>{item.author.name || "unknown"}</Link>
-              </span>
-              <span>revision {item.revision}</span>
+        <Card
+          key={item.id}
+          href={"/c/" + encodeURIComponent(item.id)}
+          kind={item.kind}
+          title={item.name}
+          byline={
+            <>
+              by <Link href={profileHref(item.author)}>{item.author.name || "unknown"}</Link>
+            </>
+          }
+          stats={[
+            { label: "Score", value: score(item.score) },
+            { label: "Lvl", value: item.levelMin || item.levelMax ? levelRange(item).replace(/^Levels? /, "") : "any" },
+            { label: "Rev", value: String(item.revision) },
+          ]}
+        >
+          {item.description ? <p className="summary">{item.description}</p> : null}
+          {item.tags.length > 0 ? (
+            <p className="chips">
+              {item.tags.slice(0, 4).map((tag) => (
+                <Chip key={tag} href={"/library?tag=" + encodeURIComponent(tag)}>
+                  {tag}
+                </Chip>
+              ))}
             </p>
-            {item.description ? <p className="summary">{item.description}</p> : null}
-            {item.tags.length > 0 ? (
-              <ul className="tags">
-                {item.tags.map((tag) => (
-                  <li key={tag}>
-                    <Link href={"/library?tag=" + encodeURIComponent(tag)}>{tag}</Link>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-        </li>
+          ) : null}
+        </Card>
       ))}
-    </ul>
+    </div>
   );
 }

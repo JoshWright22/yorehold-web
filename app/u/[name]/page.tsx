@@ -4,7 +4,9 @@ import Link from "next/link";
 import CompletionList from "@/components/CompletionList";
 import ContentList from "@/components/ContentList";
 import { FailureNotice } from "@/components/Notice";
-import { first } from "@/lib/format";
+import ProfileHead from "@/components/ProfileHead";
+import Tabs from "@/components/Tabs";
+import { first, score } from "@/lib/format";
 import { completionsList, contentSearch, isUserId, userByName } from "@/lib/server";
 import { getSession } from "@/lib/session";
 
@@ -63,7 +65,7 @@ export default async function Profile({ params, searchParams }: Props) {
   if (userId === "") {
     return (
       <>
-        <h1>{shownName}</h1>
+        <ProfileHead name={shownName} kicker="Player" />
         {lookupNote}
       </>
     );
@@ -79,27 +81,46 @@ export default async function Profile({ params, searchParams }: Props) {
     shownName = published.data.content[0].author.name;
   }
 
+  const works = published.ok ? published.data.content : [];
+  const finished = completed.ok ? completed.data.completions : [];
+
   return (
     <>
-      <h1>{shownName}</h1>
+      <ProfileHead
+        name={shownName}
+        kicker="Writer"
+        tiles={[
+          { label: "Published", value: published.ok ? works.length : "-" },
+          { label: "Total score", value: published.ok ? score(works.reduce((total, item) => total + item.score, 0)) : "-", tone: "gold" },
+          { label: "Adventures finished", value: completed.ok ? finished.length : "-" },
+        ]}
+      />
 
-      <section>
-        <h2>Published</h2>
-        {published.ok ? (
-          <ContentList items={published.data.content} empty="Nothing published yet." />
-        ) : (
-          <FailureNotice failure={published} what="published work" />
-        )}
-      </section>
-
-      <section>
-        <h2>Completed adventures</h2>
-        {completed.ok ? (
-          <CompletionList completions={completed.data.completions} empty="No adventures finished yet." />
-        ) : (
-          <FailureNotice failure={completed} what="completed adventures" />
-        )}
-      </section>
+      <Tabs
+        label="Profile"
+        tabs={[
+          {
+            id: "published",
+            label: "Published",
+            count: published.ok ? works.length : undefined,
+            panel: published.ok ? (
+              <ContentList items={works} empty="Nothing published yet." />
+            ) : (
+              <FailureNotice failure={published} what="published work" />
+            ),
+          },
+          {
+            id: "completed",
+            label: "Completed",
+            count: completed.ok ? finished.length : undefined,
+            panel: completed.ok ? (
+              <CompletionList completions={finished} empty="No adventures finished yet." />
+            ) : (
+              <FailureNotice failure={completed} what="completed adventures" />
+            ),
+          },
+        ]}
+      />
     </>
   );
 }
