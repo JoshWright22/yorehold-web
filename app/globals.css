@@ -119,37 +119,6 @@ summary:focus-visible {
   outline-offset: 2px;
 }
 
-/* Things rise into place once when a page opens */
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-}
-
-@keyframes settle {
-  from {
-    transform: scale(1.06);
-  }
-}
-
-.page > * {
-  animation: rise var(--slow) var(--ease) backwards;
-}
-
-.page > :nth-child(2) {
-  animation-delay: 60ms;
-}
-
-.page > :nth-child(3) {
-  animation-delay: 120ms;
-}
-
-.page > :nth-child(n + 4) {
-  animation-delay: 180ms;
-}
-
 /* Top bar: one round bar floating over the page */
 
 .top-bar {
@@ -201,7 +170,6 @@ summary:focus-visible {
   font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 0;
-  transition: background var(--quick) var(--ease);
 }
 
 .brand:hover .brand-mark {
@@ -240,7 +208,6 @@ summary:focus-visible {
   color: var(--muted);
   font-weight: 500;
   font-size: 0.925rem;
-  transition: background var(--quick) var(--ease), color var(--quick) var(--ease);
 }
 
 .top-head:hover,
@@ -266,9 +233,6 @@ summary:focus-visible {
   top: 100%;
   padding-top: 0.9rem;
   visibility: hidden;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity var(--quick) var(--ease), transform var(--quick) var(--ease), visibility 0s var(--quick);
 }
 
 /* the last list opens leftwards so it stays on screen in a narrow window */
@@ -280,9 +244,6 @@ summary:focus-visible {
 .top-group:hover .top-drop,
 .top-group:focus-within .top-drop {
   visibility: visible;
-  opacity: 1;
-  transform: none;
-  transition-delay: 0s;
 }
 
 .top-links.shut .top-drop {
@@ -347,11 +308,9 @@ summary:focus-visible {
   background: var(--bg);
   border-color: transparent;
   border-radius: var(--radius-pill);
-  transition: width var(--quick) var(--ease), border-color var(--quick) var(--ease);
 }
 
 .top-search input:focus {
-  width: 17rem;
   border-color: var(--line);
 }
 
@@ -513,7 +472,6 @@ summary:focus-visible {
   background-image: var(--art);
   background-size: cover;
   background-position: center 35%;
-  animation: settle 1600ms var(--ease) backwards;
 }
 
 .banner::after,
@@ -670,17 +628,12 @@ button.button {
   line-height: 1.2;
   white-space: nowrap;
   cursor: pointer;
-  transition: background var(--quick) var(--ease), color var(--quick) var(--ease), border-color var(--quick) var(--ease), transform var(--quick) var(--ease);
 }
 
 .button:hover {
   text-decoration: none;
   background: var(--accent);
   border-color: var(--accent);
-}
-
-.button:active {
-  transform: scale(0.97);
 }
 
 .button.secondary {
@@ -860,7 +813,6 @@ button.chip.removable {
   line-height: 0.72;
   letter-spacing: -0.06em;
   color: var(--ink-1);
-  transition: transform 400ms var(--ease), color 400ms var(--ease);
 }
 
 .cover::after {
@@ -891,7 +843,6 @@ button.chip.removable {
   background: var(--panel);
   border-radius: var(--radius);
   overflow: hidden;
-  transition: background var(--quick) var(--ease);
 }
 
 .card:hover,
@@ -901,7 +852,6 @@ button.chip.removable {
 
 .card:hover .cover span,
 .card:focus-within .cover span {
-  transform: translateY(-0.5rem);
   color: var(--paper);
 }
 
@@ -1102,7 +1052,6 @@ button.chip.removable {
 }
 
 .popular-row li::after {
-  transition: background var(--quick) var(--ease);
 }
 
 .popular-row li:hover::after {
@@ -1247,7 +1196,6 @@ button.chip.removable {
   inset: 0;
   z-index: -1;
   background: rgba(30, 30, 30, 0.45);
-  transition: background var(--quick) var(--ease);
 }
 
 .adv-cover:hover {
@@ -1534,7 +1482,6 @@ button.chip.removable {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color var(--quick) var(--ease);
 }
 
 .figure-label,
@@ -1623,7 +1570,6 @@ button.chip.removable {
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background var(--quick) var(--ease), color var(--quick) var(--ease), border-color var(--quick) var(--ease);
 }
 
 .filter-chip .num {
@@ -1686,7 +1632,6 @@ button.chip.removable {
 
 .ranked-table td {
   background: var(--panel);
-  transition: background var(--quick) var(--ease);
 }
 
 .ranked-table td:first-child {
@@ -1866,7 +1811,6 @@ button.chip.removable {
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: background var(--quick) var(--ease), color var(--quick) var(--ease);
 }
 
 .tab:hover {
@@ -1969,7 +1913,6 @@ textarea {
   color: var(--text);
   font: inherit;
   font-size: 0.925rem;
-  transition: border-color var(--quick) var(--ease);
 }
 
 input:hover,
@@ -2434,7 +2377,6 @@ textarea::placeholder {
   font: inherit;
   font-weight: 500;
   cursor: pointer;
-  transition: background var(--quick) var(--ease), color var(--quick) var(--ease), border-color var(--quick) var(--ease);
 }
 
 .vote-button:hover {
@@ -2740,7 +2682,6 @@ textarea::placeholder {
     background: var(--panel);
     border: var(--border);
     border-radius: var(--radius-lg);
-    animation: rise 300ms var(--ease);
   }
 
   .top-menu.open {
@@ -2928,14 +2869,5 @@ textarea::placeholder {
 
   .filter-count {
     margin-top: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
   }
 }

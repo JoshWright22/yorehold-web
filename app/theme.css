@@ -72,10 +72,7 @@
   --font-mono: var(--font-code), ui-monospace, "Cascadia Mono", Consolas, monospace;
   --display-tracking: -0.04em;
 
-  /* Motion */
-  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --quick: 140ms;
-  --slow: 700ms;
+  /* No motion anywhere: hovers and menus change at once, like a reference site. */
 
   /* Layout. The bar floats, so what sticks under it needs its height and its gap. */
   --bar-height: 3.25rem;

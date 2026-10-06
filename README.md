@@ -13,7 +13,7 @@ The website side of [Yorehold](https://github.com/JoshWright22/yorehold).
 
 ## Status
 
-A working skeleton: [Next.js](https://nextjs.org/) (App Router, TypeScript), plain CSS. Two inks (charcoal and off-white) with one butter accent, large tight type, round buttons and tabs, and pictures behind the page headings; ranked rows and profile headers like a score site, dense filterable tables with a book-page entry beside them like a rules reference. Colours, type and motion are named in `app/theme.css`; the banner pictures in `public/art` are temporary (see its `CREDITS.txt`). It talks only to the [Nakama backend](https://github.com/JoshWright22/yorehold-server), through its RPCs.
+A working skeleton: [Next.js](https://nextjs.org/) (App Router, TypeScript), plain CSS. Two inks (charcoal and off-white) with one butter accent, large tight type, round buttons and tabs, and pictures behind the page headings; ranked rows and profile headers like a score site, dense filterable tables with a book-page entry beside them like a rules reference. Nothing moves: no animations or transitions, so hovers and menus change at once like a reference site. Colours and type are named in `app/theme.css`; the banner pictures in `public/art` are temporary (see its `CREDITS.txt`). It talks only to the [Nakama backend](https://github.com/JoshWright22/yorehold-server), through its RPCs.
 
 Builds and type-checks; not yet run against a live server.
 
@@ -88,7 +88,7 @@ The top bar has Home, Adventures and four headings, split by who is reading: Rul
 app/                 the pages, one folder per address
 app/api/session/     GET who is signed in, POST sign in or sign up (sets the cookie)
 app/c/[id]/actions.ts  the vote and report server actions
-app/theme.css        the theme variables (colour, spacing, radii, type, motion)
+app/theme.css        the theme variables (colour, spacing, radii, type)
 components/ui.tsx    card, tab bar, filter bar, stat tile, stat block, button, chip, split view, section, news list, rank list
 components/Browser.tsx  the list and detail browser: filter, sort, pick an entry
 components/RankedTable.tsx  the ranked table: filter chips, sorting, a row opens its page

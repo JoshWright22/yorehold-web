@@ -49,6 +49,11 @@ export default function Browser({
   const [chip, setChip] = useState("");
   const [sort, setSort] = useState<SortState>({ key: "", up: true });
   const [selected, setSelected] = useState(selectedId ?? rows[0]?.id ?? "");
+  const [lastSelectedId, setLastSelectedId] = useState(selectedId);
+  if (selectedId !== lastSelectedId) {
+    setLastSelectedId(selectedId);
+    if (selectedId) setSelected(selectedId);
+  }
   const detailRef = useRef<HTMLDivElement>(null);
 
   const chipOptions = useMemo(() => [...new Set(rows.flatMap((row) => row.chips))].sort(), [rows]);
@@ -73,7 +78,7 @@ export default function Browser({
     if (syncUrl) window.history.replaceState(null, "", row.href);
     // On a phone the detail sits under the list, so bring it into view.
     if (window.matchMedia("(max-width: 860px)").matches) {
-      detailRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      detailRef.current?.scrollIntoView({ block: "start" });
     }
   }
 
@@ -223,7 +228,7 @@ export default function Browser({
 
   const detail = (
     <div ref={detailRef} className="detail-pane">
-      {current ? <StatBlock sheet={current.sheet} /> : <p className="empty">Pick an entry to read it here.</p>}
+      {current ? <div key={current.id} className="entry-change"><StatBlock sheet={current.sheet} /></div> : <p className="empty">Pick an entry to read it here.</p>}
     </div>
   );
 
