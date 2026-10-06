@@ -75,7 +75,7 @@ The keys are only read by server code and never reach the browser.
 | `/compendium/<kind>/<id>` | The same, with that entry picked |
 | `/c/<id>` | A content page: name, author, description, tags, level range, revision, score with vote buttons, "Open in Yorehold" (`yorehold://content/<id>`) with the file download as the fallback |
 | `/c/<id>/report` | Report that content to the moderators (signed in) |
-| `/u/<name>` | A profile: published work and completed adventures |
+| `/u/<name>` | A profile: stats in two halves under the header (as a player: rank by play time, play time, adventures started and finished, sessions, characters, hours each month; as a writer: rank by score, score, works, votes, favourites, plays and time others spent in their work, plays each month), then published work and completed adventures. `/account` shows the same stats. Writing numbers are counted from the library; play numbers come from a `profile_stats` RPC the server does not have yet (the sample answers it) |
 | `/login` | Sign in, or sign up with `?mode=signup`, by email and password |
 | `/logout` | Signs out (POST) |
 | `/account` | The signed-in player's own page, in tabs (`?tab=` opens one): Characters (the creator, below), Favourites, Your content, Completed and Settings. Settings sets a picture and a profile background. Both are cut to size in the browser and kept there (`lib/appearance.ts`) until the server stores them, so for now only their owner sees them. The background runs across the top of the profile and the picture shows over it and in the top right of the bar |

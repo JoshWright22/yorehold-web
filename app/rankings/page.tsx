@@ -5,7 +5,8 @@ import { FailureNotice } from "@/components/Notice";
 import { PageHead } from "@/components/ui";
 import { allContent } from "@/lib/catalog";
 import { first, profileHref, score } from "@/lib/format";
-import type { ContentItem, ContentKind } from "@/lib/server";
+import type { ContentKind } from "@/lib/server";
+import { rankWriters, tallyWriters, type WriterBy } from "@/lib/writers";
 
 export const metadata: Metadata = { title: "Rankings" };
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ export const dynamic = "force-dynamic";
 type Query = { [key: string]: string | string[] | undefined };
 
 // What writers can be ranked by. Score is the default, like a performance ranking.
-type By = "score" | "favourites" | "works" | "upvotes";
+type By = WriterBy;
 
 const bys: { id: By; label: string }[] = [
   { id: "score", label: "Score" },
@@ -29,40 +30,6 @@ const kinds: { id: "" | ContentKind; label: string }[] = [
 ];
 
 const pageSize = 50;
-
-interface Writer {
-  id: string;
-  name: string;
-  works: number;
-  adventures: number;
-  packs: number;
-  score: number;
-  upvotes: number;
-  favourites: number;
-  best: ContentItem;
-}
-
-function writers(items: ContentItem[]): Writer[] {
-  const byId = new Map<string, Writer>();
-  for (const item of items) {
-    const writer =
-      byId.get(item.author.id) ??
-      ({ id: item.author.id, name: item.author.name || "unknown", works: 0, adventures: 0, packs: 0, score: 0, upvotes: 0, favourites: 0, best: item } as Writer);
-    writer.works += 1;
-    if (item.kind === "adventure") writer.adventures += 1;
-    if (item.kind === "definitions") writer.packs += 1;
-    writer.score += item.score;
-    writer.upvotes += item.votesUp;
-    writer.favourites += item.favourites ?? 0;
-    if (item.score > writer.best.score) writer.best = item;
-    byId.set(item.author.id, writer);
-  }
-  return [...byId.values()];
-}
-
-function value(writer: Writer, by: By): number {
-  return by === "favourites" ? writer.favourites : by === "works" ? writer.works : by === "upvotes" ? writer.upvotes : writer.score;
-}
 
 export default async function Rankings({ searchParams }: { searchParams: Promise<Query> }) {
   const query = await searchParams;
@@ -107,7 +74,7 @@ export default async function Rankings({ searchParams }: { searchParams: Promise
         <FailureNotice failure={result} what="the rankings" />
       ) : (
         (() => {
-          const ranked = writers(result.items).sort((a, b) => value(b, by) - value(a, by) || b.score - a.score || a.name.localeCompare(b.name));
+          const ranked = rankWriters(tallyWriters(result.items), by);
           const pages = Math.max(1, Math.ceil(ranked.length / pageSize));
           const shown = ranked.slice((page - 1) * pageSize, page * pageSize);
           if (ranked.length === 0) return <p className="list-empty">Nobody has published yet.</p>;

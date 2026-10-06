@@ -11,6 +11,7 @@ import type {
   ContentKind,
   ContentSearchRequest,
   ContentSearchResponse,
+  ProfileStatsResponse,
   StatPoint,
   StatsResponse,
 } from "./server";
@@ -211,6 +212,61 @@ function stats(): StatsResponse {
   return { publishedWeekly, playersDaily };
 }
 
+// A stable number from 0 to 1 per account and purpose, so a profile reads the same every visit.
+function seeded(userId: string, salt: string): number {
+  const hex = createHash("sha256").update(userId + salt).digest("hex").slice(0, 8);
+  return parseInt(hex, 16) / 0xffffffff;
+}
+
+function monthStart(monthsAgo: number): string {
+  const at = new Date(today);
+  return dayString(Date.UTC(at.getUTCFullYear(), at.getUTCMonth() - monthsAgo, 1));
+}
+
+function profileStats(userId: string): ProfileStatsResponse {
+  const keen = seeded(userId, "keen");
+  const months = 12;
+  const hoursMonthly: StatPoint[] = [];
+  for (let i = 0; i < months; i++) {
+    const ago = months - 1 - i;
+    // Someone who has played longer has more months with time in them, with a lull here and there.
+    const active = ago < 3 + Math.floor(keen * 10);
+    hoursMonthly.push({ day: monthStart(ago), value: active ? Math.round((8 + keen * 70) * (0.5 + seeded(userId, "m" + i))) : 0 });
+  }
+  const hours = hoursMonthly.reduce((sum, point) => sum + point.value, 0);
+  const finished = Math.round(hours / 9);
+
+  const works = items.filter((item) => item.author.id === userId && item.kind === "adventure");
+  const plays = works.reduce((sum, item) => sum + (item.favourites ?? 0) * 4 + item.votesUp * 2, 0);
+  const playsMonthly: StatPoint[] = [];
+  for (let i = 0; i < months; i++) {
+    const share = works.length === 0 ? 0 : (0.4 + i / months) * (0.7 + seeded(userId, "p" + i) * 0.6);
+    playsMonthly.push({ day: monthStart(months - 1 - i), value: Math.round((plays / months) * share) });
+  }
+
+  return {
+    player: {
+      playTime: hours * 3600 + Math.round(seeded(userId, "min") * 3599),
+      rank: hours === 0 ? 0 : 1 + Math.round((1 - keen) * 4200),
+      sessions: Math.round(hours / 1.7),
+      adventuresStarted: finished + Math.round(seeded(userId, "drop") * 6),
+      adventuresFinished: finished,
+      charactersMade: 1 + Math.round(keen * 11),
+      charactersFallen: Math.round(keen * 9 * seeded(userId, "fall")),
+      longestSession: Math.round((2 + keen * 6) * 3600),
+      joinedAt: today - Math.round((60 + keen * 600) * day),
+      lastPlayedAt: today - Math.round(seeded(userId, "last") * 5 * day),
+      hoursMonthly,
+    },
+    writer: {
+      plays,
+      finishes: Math.round(plays * 0.58),
+      timePlayed: Math.round(plays * 2.6 * 3600),
+      playsMonthly,
+    },
+  };
+}
+
 // The answer the server would give to an RPC, or null for one the sample does not cover.
 export function sampleRpc(id: string, payload: object): unknown {
   const body = payload as Record<string, unknown>;
@@ -225,6 +281,8 @@ export function sampleRpc(id: string, payload: object): unknown {
       return completions(String(body.userId ?? ""));
     case "stats":
       return stats();
+    case "profile_stats":
+      return profileStats(String(body.userId ?? ""));
     // config is left out on purpose: the status page asks it to learn whether the server is up.
     default:
       return null;

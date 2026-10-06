@@ -7,11 +7,13 @@ import CompletionList from "@/components/CompletionList";
 import ContentList from "@/components/ContentList";
 import { FailureNotice } from "@/components/Notice";
 import ProfileHead from "@/components/ProfileHead";
+import ProfileStats from "@/components/ProfileStats";
 import Tabs from "@/components/Tabs";
 import { Button } from "@/components/ui";
 import { loadCreator } from "@/lib/creator";
-import { first, profileHref, score } from "@/lib/format";
-import { completionsList, contentSearch } from "@/lib/server";
+import { first, profileHref } from "@/lib/format";
+import { completionsList, contentSearch, profileStats } from "@/lib/server";
+import { allContent } from "@/lib/catalog";
 import { getSession } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Account" };
@@ -26,10 +28,12 @@ export default async function Account({ searchParams }: { searchParams: Promise<
   const tab = first((await searchParams).tab);
   if (!session) redirect("/login?next=" + encodeURIComponent("/account" + (tab ? "?tab=" + tab : "")));
 
-  const [published, completed, creator] = await Promise.all([
+  const [published, completed, creator, counted, library] = await Promise.all([
     contentSearch({ author: session.userId, sort: "new", limit: 50 }),
     completionsList(session.userId, 50),
     loadCreator(),
+    profileStats(session.userId),
+    allContent(),
   ]);
 
   const works = published.ok ? published.data.content : [];
@@ -41,11 +45,6 @@ export default async function Account({ searchParams }: { searchParams: Promise<
         userId={session.userId}
         name={session.name || "Your account"}
         kicker="Your account"
-        tiles={[
-          { label: "Published", value: published.ok ? works.length : "-" },
-          { label: "Total score", value: published.ok ? score(works.reduce((total, item) => total + item.score, 0)) : "-", tone: "gold" },
-          { label: "Adventures finished", value: completed.ok ? finished.length : "-" },
-        ]}
       >
         <Button href={profileHref({ id: session.userId, name: session.name })} tone="secondary">
           Public profile
@@ -56,6 +55,8 @@ export default async function Account({ searchParams }: { searchParams: Promise<
           </button>
         </form>
       </ProfileHead>
+
+      <ProfileStats userId={session.userId} stats={counted} library={library.ok ? library.items : works} />
 
       <Tabs
         // A new tab in the address (from the picture menu) opens that tab even on this same page.

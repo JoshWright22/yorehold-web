@@ -140,6 +140,36 @@ export interface StatsResponse {
   playersDaily: StatPoint[];
 }
 
+// What the server counts about one account. Scores, works and favourites a writer has earned are
+// counted from the library on the site; these are the things only the server sees.
+export interface ProfileStatsResponse {
+  player: {
+    // Seconds spent in adventures.
+    playTime: number;
+    // Rank among all players by play time; 0 when unranked.
+    rank: number;
+    sessions: number;
+    adventuresStarted: number;
+    adventuresFinished: number;
+    charactersMade: number;
+    charactersFallen: number;
+    longestSession: number;
+    joinedAt: number;
+    lastPlayedAt: number;
+    // Hours played in each of the last months, oldest first.
+    hoursMonthly: StatPoint[];
+  };
+  writer: {
+    // How many times others started, and finished, this writer's adventures.
+    plays: number;
+    finishes: number;
+    // Seconds others have spent in this writer's adventures.
+    timePlayed: number;
+    // Plays of this writer's work in each of the last months, oldest first.
+    playsMonthly: StatPoint[];
+  };
+}
+
 export interface AuthResponse {
   token: string;
   refresh_token: string;
@@ -304,6 +334,11 @@ export function report(kind: ReportKind, id: string, reason: string, token: stri
 // Not on the server yet; until it is, the home page graphs show only with YOREHOLD_SAMPLE=1.
 export function stats(): Promise<Result<StatsResponse>> {
   return rpc<StatsResponse>("stats", {});
+}
+
+// Not on the server yet either; profiles show only the library's numbers without it.
+export function profileStats(userId: string): Promise<Result<ProfileStatsResponse>> {
+  return rpc<ProfileStatsResponse>("profile_stats", { userId });
 }
 
 export function config(): Promise<Result<ConfigResponse>> {

@@ -5,9 +5,11 @@ import CompletionList from "@/components/CompletionList";
 import ContentList from "@/components/ContentList";
 import { FailureNotice } from "@/components/Notice";
 import ProfileHead from "@/components/ProfileHead";
+import ProfileStats from "@/components/ProfileStats";
 import Tabs from "@/components/Tabs";
-import { first, score } from "@/lib/format";
-import { completionsList, contentSearch, isUserId, userByName } from "@/lib/server";
+import { first } from "@/lib/format";
+import { allContent } from "@/lib/catalog";
+import { completionsList, contentSearch, isUserId, profileStats, userByName } from "@/lib/server";
 import { getSession } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
@@ -71,9 +73,11 @@ export default async function Profile({ params, searchParams }: Props) {
     );
   }
 
-  const [published, completed] = await Promise.all([
+  const [published, completed, counted, library] = await Promise.all([
     contentSearch({ author: userId, sort: "new", limit: 50 }),
     completionsList(userId, 50),
+    profileStats(userId),
+    allContent(),
   ]);
 
   // The name a profile is known by is the one on its published work.
@@ -89,13 +93,10 @@ export default async function Profile({ params, searchParams }: Props) {
       <ProfileHead
         userId={userId}
         name={shownName}
-        kicker="Writer"
-        tiles={[
-          { label: "Published", value: published.ok ? works.length : "-" },
-          { label: "Total score", value: published.ok ? score(works.reduce((total, item) => total + item.score, 0)) : "-", tone: "gold" },
-          { label: "Adventures finished", value: completed.ok ? finished.length : "-" },
-        ]}
+        kicker="Player"
       />
+
+      <ProfileStats userId={userId} stats={counted} library={library.ok ? library.items : works} />
 
       <Tabs
         label="Profile"
