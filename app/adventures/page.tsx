@@ -35,9 +35,12 @@ function levelParam(value: string, fallback: number): number {
 // A starting set until the server can say which tags are used most.
 const tags = ["mystery", "horror", "dungeon", "city", "coast", "intrigue", "war", "travel", "dialogue", "short"];
 
+// Newest first, so new writing gets seen before it has votes.
+const defaultSort: ContentSort = "new";
+
 const sorts: { id: ContentSort; label: string }[] = [
-  { id: "score", label: "Score" },
   { id: "new", label: "Newest" },
+  { id: "score", label: "Score" },
   { id: "name", label: "Name" },
 ];
 
@@ -58,7 +61,7 @@ export default async function Adventures({ searchParams }: { searchParams: Promi
   const levelMin = Math.min(minText, maxText);
   const levelMax = Math.max(minText, maxText);
   const sortText = first(query.sort);
-  const sort: ContentSort = contentSorts.includes(sortText as ContentSort) ? (sortText as ContentSort) : "score";
+  const sort: ContentSort = contentSorts.includes(sortText as ContentSort) ? (sortText as ContentSort) : defaultSort;
   const cursor = /^\d{1,9}$/.test(first(query.cursor)) ? first(query.cursor) : "";
 
   // The same search with one thing changed; changing a filter goes back to the first page.
@@ -70,7 +73,7 @@ export default async function Adventures({ searchParams }: { searchParams: Promi
     if (next.tag) params.set("tag", next.tag);
     if (levelMin > lowest) params.set("min", String(levelMin));
     if (levelMax < highest) params.set("max", String(levelMax));
-    if (next.sort !== "score") params.set("sort", next.sort);
+    if (next.sort !== defaultSort) params.set("sort", next.sort);
     if (change.cursor) params.set("cursor", change.cursor);
     const built = params.toString();
     return built ? "/adventures?" + built : "/adventures";
@@ -93,7 +96,7 @@ export default async function Adventures({ searchParams }: { searchParams: Promi
           {tag ? <input type="hidden" name="tag" value={tag} /> : null}
           {levelMin > lowest ? <input type="hidden" name="min" value={levelMin} /> : null}
           {levelMax < highest ? <input type="hidden" name="max" value={levelMax} /> : null}
-          {sort !== "score" ? <input type="hidden" name="sort" value={sort} /> : null}
+          {sort !== defaultSort ? <input type="hidden" name="sort" value={sort} /> : null}
           <button type="submit" className="button primary">
             Search
           </button>
