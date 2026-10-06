@@ -62,7 +62,7 @@ The keys are only read by server code and never reach the browser.
 | Address | What is there |
 |---|---|
 | `/` | The top adventure by score on a picture, with the news, Download and Play beside it; the next four popular adventures as a row of pictures; two graphs, content published per week and players per day, with the point under the pointer read out (from a `stats` RPC the server does not have yet, so they only show with `YOREHOLD_SAMPLE=1` for now); a row of counts of what is in the compendium; then the newest 50 pieces of content as a ranked table (25 shown, filter chips by kind, columns that sort, click a row to open it) with the top writers beside it. With an empty library the picture shows the game's headline instead |
-| `/adventures` | The second tab: a search box over rows of filters (show adventures, packs or favourites; a level bar from 1 to 20 with two handles; tag; sort), then cards two to a line with the picture, writer, levels, tags, score and Favourite and Download buttons. Favourites are kept in the browser (`lib/favourites.ts`) until the server stores them. Driven by `?q=&show=&min=&max=&tag=&sort=&cursor=` |
+| `/adventures` | The second tab: a search box over rows of filters (show adventures, packs or favourites; a level bar from 1 to 20 with two handles; tag; sort), then cards two to a line with the picture, writer, levels, tags, score and Favourite and Download buttons. Favourites are kept in the browser (`lib/favourites.ts`) until the server stores them. Driven by `?q=&show=&min=&max=&tag=&sort=&cursor=`; `sort` is `new` (the default), `score`, `favourites` (needs a `favourites` count from the server; the sample has one) or `name` |
 | `/c/<id>/download` | Sends the browser to the content's file, or to `yorehold://content/<id>` when it has none; in sample mode it hands over a small stand-in file |
 | `/library` | Search by text, kind, tag and level range, sorted by score, newest or name, with paging. Driven by the query string: `?q=&kind=&tag=&min=&max=&sort=&cursor=`. The page it gets is shown as a table that can be filtered and sorted in place, with the picked entry beside it |
 | `/compendium/<kind>` | The game's chapters, creatures, items, spells and classes as a filterable table with a stat block beside it; skins is an empty tab for now |
@@ -74,13 +74,14 @@ The keys are only read by server code and never reach the browser.
 | `/logout` | Signs out (POST) |
 | `/account` | The signed-in user's own name, content and completions |
 | `/play` | Placeholder for the browser build of the game, with the download link |
+| `/characters` | Character creator: name, race, class, background and ability scores (point buy, standard array or rolled) with the sheet beside them, all read from the game's ruleset files in `../yorehold-godot/assets`. Saves in the browser, or downloads the game's own character file (the format `CharacterChoices` reads) |
 | `/forums` | Placeholder: the categories, "coming soon" |
 | `/canon` | Placeholder for the review queue |
 | `/docs` | The format docs from the game and framework repos |
 | `/status` | Whether the game server answers, and how fast |
 | `/site-rules`, `/terms`, `/privacy` | Placeholders: the text is not written yet |
 
-The top bar has Home, Adventures and four headings, split by who is reading: Rules, Players, Designers and Community. They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
+The top bar has Home, then Adventures (newest, most favourited, top scored, packs, your favourites) and four headings split by who is reading: Rules, Players (everything a player uses, with the character creator), Designers and Community. They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it at once; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
 
 ## Layout
 

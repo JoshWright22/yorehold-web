@@ -41,12 +41,13 @@ const defaultSort: ContentSort = "new";
 const sorts: { id: ContentSort; label: string }[] = [
   { id: "new", label: "Newest" },
   { id: "score", label: "Score" },
+  { id: "favourites", label: "Favourites" },
   { id: "name", label: "Name" },
 ];
 
 function card(item: ContentItem): CardItem {
-  const { id, kind, name, description, tags, levelMin, levelMax, author, score, votesUp, votesDown } = item;
-  return { id, kind, name, description, tags, levelMin, levelMax, author, score, votesUp, votesDown };
+  const { id, kind, name, description, tags, levelMin, levelMax, author, score, votesUp, votesDown, favourites } = item;
+  return { id, kind, name, description, tags, levelMin, levelMax, author, score, votesUp, votesDown, favourites };
 }
 
 export default async function Adventures({ searchParams }: { searchParams: Promise<Query> }) {

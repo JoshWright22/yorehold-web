@@ -6,7 +6,7 @@
 import { useSyncExternalStore } from "react";
 import type { ContentItem } from "./server";
 
-export type Favourite = Pick<ContentItem, "id" | "kind" | "name" | "description" | "tags" | "levelMin" | "levelMax" | "author" | "score" | "votesUp" | "votesDown"> & {
+export type Favourite = Pick<ContentItem, "id" | "kind" | "name" | "description" | "tags" | "levelMin" | "levelMax" | "author" | "score" | "votesUp" | "votesDown" | "favourites"> & {
   savedAt: number;
 };
 

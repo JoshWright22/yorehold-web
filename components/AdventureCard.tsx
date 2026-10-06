@@ -15,6 +15,8 @@ export function AdventureCard({ item }: { item: CardItem }) {
   const favourites = useFavourites();
   const favourite = favourites.some((entry) => entry.id === item.id);
   const href = "/c/" + encodeURIComponent(item.id);
+  // The server never hears of a favourite kept in this browser, so it is added on here.
+  const favouriteCount = (item.favourites ?? 0) + (favourite ? 1 : 0);
 
   return (
     <article className={"adv-card kind-" + item.kind}>
@@ -49,6 +51,7 @@ export function AdventureCard({ item }: { item: CardItem }) {
             onClick={() => toggleFavourite(item)}
           >
             {favourite ? "Favourited" : "Favourite"}
+            <span className="adv-count num">{favouriteCount}</span>
           </button>
           <a href={href + "/download"} className="adv-button" download>
             Download

@@ -246,9 +246,8 @@ summary:focus-visible {
   visibility: visible;
 }
 
-.top-links.shut .top-drop {
+.top-group.shut .top-drop {
   visibility: hidden;
-  opacity: 0;
 }
 
 .top-drop ul {
@@ -1392,6 +1391,16 @@ button.chip.removable {
   text-decoration: none;
 }
 
+.adv-count {
+  margin-left: 0.45rem;
+  color: var(--faint);
+  font-weight: 500;
+}
+
+.adv-button.on .adv-count {
+  color: var(--ink-soft);
+}
+
 .adv-button.on {
   background: var(--accent);
   border-color: var(--accent);
@@ -1404,6 +1413,261 @@ button.chip.removable {
   align-items: center;
   gap: var(--space-4);
   margin: var(--space-5) 0 0;
+}
+
+/* Character creator: dense pick lists on the left, the sheet stuck beside them on the right */
+
+.cc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.cc-form {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.cc-section h2,
+.cc-saved h2 {
+  margin: 0 0 var(--space-2);
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cc-name {
+  width: 100%;
+  max-width: 24rem;
+  font-size: 1.05rem;
+}
+
+.cc-picks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cc-picks button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.45rem var(--space-3);
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cc-picks button:hover {
+  border-color: var(--line);
+}
+
+.cc-picks button.on {
+  background: var(--paper);
+  color: var(--ink-1);
+}
+
+.cc-pick-name {
+  font-weight: 600;
+}
+
+.cc-pick-note {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.cc-picks button.on .cc-pick-note {
+  color: var(--ink-soft);
+}
+
+.cc-desc {
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+  font-family: var(--font-book);
+  font-size: 0.9rem;
+}
+
+.cc-features {
+  display: grid;
+  gap: var(--space-1);
+  margin: calc(var(--space-3) * -1) 0 0;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--line);
+  font-family: var(--font-book);
+  font-size: 0.875rem;
+}
+
+.cc-features div {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.cc-features dt {
+  font-weight: 700;
+}
+
+.cc-features dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.cc-methods {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-3);
+}
+
+.cc-budget {
+  margin-left: var(--space-3);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.cc-budget.over {
+  color: var(--bad);
+}
+
+.cc-scores {
+  width: 100%;
+  max-width: 34rem;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.cc-scores th,
+.cc-scores td {
+  padding: 0.35rem var(--space-3);
+  border-bottom: var(--border-hair);
+  text-align: left;
+}
+
+.cc-scores thead th {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cc-step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cc-step button {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  background: var(--panel);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cc-step button:disabled {
+  color: var(--faint);
+  cursor: default;
+}
+
+.cc-sheet {
+  position: sticky;
+  top: calc(var(--bar-space) + var(--space-3));
+  display: grid;
+  gap: var(--space-4);
+}
+
+.cc-abilities {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  margin: 0;
+  text-align: center;
+}
+
+.cc-abilities dt {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+
+.cc-abilities dd {
+  display: grid;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cc-abilities dd span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.cc-armor-note {
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+.cc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+}
+
+.cc-actions .button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.cc-message {
+  min-height: 1.2em;
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.cc-saved ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cc-saved li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem var(--space-3);
+  background: var(--panel);
+  border-radius: var(--radius-sm);
+}
+
+.cc-saved li > span {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Two small graphs side by side: the newest number large, the marks in the accent, the grid
@@ -2715,8 +2979,13 @@ textarea::placeholder {
 @media (max-width: 860px) {
   .home-top,
   .home-graphs,
-  .adv-grid {
+  .adv-grid,
+  .cc {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cc-sheet {
+    position: static;
   }
 }
 
@@ -2812,7 +3081,7 @@ textarea::placeholder {
   }
 
   .top-drop,
-  .top-links.shut .top-drop {
+  .top-group.shut .top-drop {
     position: static;
     padding-top: var(--space-1);
     visibility: visible;

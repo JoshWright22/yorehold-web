@@ -11,8 +11,9 @@ export const contentKinds: ContentKind[] = ["adventure", "ruleset", "definitions
 // still knows the kind.
 export const shownKinds: ContentKind[] = ["adventure", "definitions"];
 
-export type ContentSort = "score" | "new" | "name";
-export const contentSorts: ContentSort[] = ["score", "new", "name"];
+// "favourites" needs the server to count favourites; until it does, only the sample sorts by it.
+export type ContentSort = "score" | "new" | "name" | "favourites";
+export const contentSorts: ContentSort[] = ["score", "new", "name", "favourites"];
 
 export type Vote = "up" | "down" | "";
 export type VoteRequest = "up" | "down" | "clear";
@@ -40,6 +41,8 @@ export interface ContentItem {
   score: number;
   votesUp: number;
   votesDown: number;
+  // How many players keep it as a favourite. Older servers leave it out.
+  favourites?: number;
   hidden: boolean;
   // Milliseconds since 1970 (UTC).
   createdAt: number;

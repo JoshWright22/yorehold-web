@@ -16,17 +16,28 @@ interface Entry {
   label: string;
   // What the entry is, in a few words.
   note: string;
+  // Only this address, not the pages under it, counts as this entry.
+  exact?: boolean;
 }
 
-// Split by who is reading: the one set of rules everyone plays by, what a player looks things up in, and
-// what someone writing content needs. Pressing a heading goes to its first entry.
+// After Home: the adventures, then split by who is reading: the one set of rules everyone plays
+// by, everything a player uses, and what someone writing content needs. Pressing a heading goes to
+// its first entry.
 const groups: { label: string; entries: Entry[] }[] = [
+  {
+    label: "Adventures",
+    entries: [
+      { href: "/adventures", label: "Newest", note: "Everything, newest first" },
+      { href: "/adventures?sort=favourites", label: "Most favourited", note: "What players keep" },
+      { href: "/adventures?sort=score", label: "Top scored", note: "By votes" },
+      { href: "/adventures?show=definitions", label: "Packs", note: "Creatures, items and places to build on" },
+      { href: "/adventures?show=fav", label: "Your favourites", note: "Kept in this browser" },
+    ],
+  },
   {
     label: "Rules",
     entries: [
-      { href: "/compendium/classes", label: "Classes", note: "Features level by level" },
-      { href: "/compendium/spells", label: "Spells", note: "Every spell list" },
-      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear" },
+      { href: "/compendium", label: "Compendium", note: "Every entry of the rules", exact: true },
       { href: "/canon", label: "Canon", note: "What is up for review" },
     ],
   },
@@ -34,7 +45,11 @@ const groups: { label: string; entries: Entry[] }[] = [
     label: "Players",
     entries: [
       { href: "/play", label: "Play", note: "In the browser, or download" },
-      { href: "/adventures?show=fav", label: "Favourites", note: "Adventures you kept" },
+      { href: "/characters", label: "Character creator", note: "Make one, take it into the game" },
+      { href: "/compendium/classes", label: "Classes", note: "Features level by level" },
+      { href: "/compendium/spells", label: "Spells", note: "Every spell list" },
+      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear" },
+      { href: "/account", label: "Your account", note: "Your work and completions" },
     ],
   },
   {
@@ -59,15 +74,15 @@ const groups: { label: string; entries: Entry[] }[] = [
 // An entry with a query shares its page with others, so only a plain address can claim a page.
 function claims(entry: Entry, pathname: string): boolean {
   if (entry.href.includes("?")) return false;
-  return pathname === entry.href || pathname.startsWith(entry.href + "/");
+  return pathname === entry.href || (!entry.exact && pathname.startsWith(entry.href + "/"));
 }
 
 export default function TopBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  // After an entry is pressed the lists stay shut until the pointer leaves the bar, so the one
-  // just used does not hang over the new page.
-  const [shut, setShut] = useState(false);
+  // After an entry is pressed its list stays shut until the pointer leaves that heading, so it does
+  // not hang over the new page. Every other heading still opens as soon as it is pointed at.
+  const [shut, setShut] = useState("");
   const [lastPath, setLastPath] = useState(pathname);
 
   // Close the menu after moving to another page.
@@ -85,8 +100,8 @@ export default function TopBar() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  function pressed() {
-    setShut(true);
+  function pressed(group: string) {
+    setShut(group);
     setOpen(false);
     // Focus would hold the list open just as the pointer does.
     (document.activeElement as HTMLElement | null)?.blur();
@@ -112,28 +127,27 @@ export default function TopBar() {
           <span className="burger" aria-hidden="true" />
         </button>
         <div id="site-menu" className={open ? "top-menu open" : "top-menu"}>
-          <nav aria-label="Main" onMouseLeave={() => setShut(false)}>
-            <ul className={shut ? "top-links shut" : "top-links"}>
-              <li className="top-group">
-                <Link href="/" className={pathname === "/" ? "top-head active" : "top-head"} aria-current={pathname === "/" ? "page" : undefined} onClick={pressed}>
-                  Home
-                </Link>
-              </li>
+          <nav aria-label="Main">
+            <ul className="top-links">
               <li className="top-group">
                 <Link
-                  href="/adventures"
-                  className={pathname === "/adventures" ? "top-head active" : "top-head"}
-                  aria-current={pathname === "/adventures" ? "page" : undefined}
-                  onClick={pressed}
+                  href="/"
+                  className={pathname === "/" ? "top-head active" : "top-head"}
+                  aria-current={pathname === "/" ? "page" : undefined}
+                  onClick={() => pressed("")}
                 >
-                  Adventures
+                  Home
                 </Link>
               </li>
               {groups.map((group) => {
                 const active = group.entries.some((entry) => claims(entry, pathname));
                 return (
-                  <li key={group.label} className="top-group">
-                    <Link href={group.entries[0].href} className={active ? "top-head active" : "top-head"} onClick={pressed}>
+                  <li
+                    key={group.label}
+                    className={shut === group.label ? "top-group shut" : "top-group"}
+                    onMouseLeave={() => setShut((value) => (value === group.label ? "" : value))}
+                  >
+                    <Link href={group.entries[0].href} className={active ? "top-head active" : "top-head"} onClick={() => pressed(group.label)}>
                       {group.label}
                     </Link>
                     <div className="top-drop">
@@ -142,7 +156,7 @@ export default function TopBar() {
                           const current = claims(entry, pathname);
                           return (
                             <li key={entry.href}>
-                              <Link href={entry.href} className={current ? "current" : undefined} aria-current={current ? "page" : undefined} onClick={pressed}>
+                              <Link href={entry.href} className={current ? "current" : undefined} aria-current={current ? "page" : undefined} onClick={() => pressed(group.label)}>
                                 {entry.label}
                                 <span className="top-note">{entry.note}</span>
                               </Link>

@@ -80,6 +80,8 @@ const items: ContentItem[] = rows.map(([name, kind, author, tags, levelMin, leve
   score: up - down,
   votesUp: up,
   votesDown: down,
+  // Loosely follows the votes, with its own wobble so the two sorts differ.
+  favourites: Math.round(up * 0.6 + ((i * 53) % 37)),
   hidden: false,
   // Spread through the day so items made on the same day still have an order.
   createdAt: today - age * day - i * 3_600_000,
@@ -99,7 +101,13 @@ function search(request: ContentSearchRequest): ContentSearchResponse {
   );
   const sort = request.sort ?? "score";
   found = [...found].sort((a, b) =>
-    sort === "new" ? b.createdAt - a.createdAt : sort === "name" ? a.name.localeCompare(b.name) : b.score - a.score,
+    sort === "new"
+      ? b.createdAt - a.createdAt
+      : sort === "name"
+        ? a.name.localeCompare(b.name)
+        : sort === "favourites"
+          ? (b.favourites ?? 0) - (a.favourites ?? 0)
+          : b.score - a.score,
   );
   const limit = Math.min(Math.max(request.limit ?? 20, 1), 50);
   const start = Number(request.cursor ?? "0") || 0;

@@ -99,6 +99,7 @@ export default async function Library({ searchParams }: { searchParams: Promise<
               <option value="score">Score</option>
               <option value="new">Newest</option>
               <option value="name">Name</option>
+              <option value="favourites">Favourites</option>
             </select>
           </label>
           <button type="submit" className="button primary">

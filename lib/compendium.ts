@@ -80,7 +80,7 @@ export function kindInfo(id: string): KindInfo | undefined {
   return compendiumKinds.find((kind) => kind.id === id);
 }
 
-type Json = { [key: string]: unknown };
+export type Json = { [key: string]: unknown };
 
 function isObject(value: unknown): value is Json {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -111,11 +111,11 @@ function spaced(value: string): string {
   return value.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
 }
 
-function fromRoot(...parts: string[]): string {
+export function fromRoot(...parts: string[]): string {
   return path.join(/* turbopackIgnore: true */ process.cwd(), assetRoot, ...parts);
 }
 
-async function readJson(file: string): Promise<Json | null> {
+export async function readJson(file: string): Promise<Json | null> {
   try {
     const parsed: unknown = JSON.parse(await readFile(file, "utf8"));
     return isObject(parsed) ? parsed : null;
@@ -124,7 +124,7 @@ async function readJson(file: string): Promise<Json | null> {
   }
 }
 
-async function jsonFiles(folder: string): Promise<Json[]> {
+export async function jsonFiles(folder: string): Promise<Json[]> {
   let names: string[];
   try {
     names = await readdir(fromRoot(folder));
