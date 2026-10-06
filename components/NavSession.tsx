@@ -64,8 +64,11 @@ export default function NavSession() {
         </summary>
         <div className="account-drop">
           <p className="account-drop-name">{name}</p>
-          <Link href="/account">Account</Link>
+          <Link href="/account?tab=characters">Characters</Link>
+          <Link href="/account?tab=favourites">Favourites</Link>
+          <Link href="/account?tab=content">Your content</Link>
           <Link href={profile}>Public profile</Link>
+          <Link href="/account?tab=settings">Settings</Link>
           <form action="/logout" method="post">
             <button type="submit" className="link-button">
               Sign out

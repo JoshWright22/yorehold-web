@@ -31,8 +31,8 @@ export default function Guide() {
           title: "Get the game",
           body: (
             <p>
-              The game is free and runs on Windows for now. <Link href="/play">Download it here</Link>. Making an account is optional for playing; you need one to vote,
-              publish and keep a profile. <Link href="/login?mode=signup">Join</Link> takes an email and a password.
+              The game is free and runs on Windows for now. <Link href="/play">Download it here</Link>. You need an account to play; it also holds your characters,
+              favourites and votes. <Link href="/login?mode=signup">Join</Link> takes an email and a password.
             </p>
           ),
         },
@@ -45,7 +45,8 @@ export default function Guide() {
                 A character is a race, a class and a background, plus six ability scores. Scores can be bought with points, taken from a standard set, or rolled.
               </p>
               <p>
-                You can do it in the game, or in the <Link href="/characters">character creator</Link> here and download the file into the game. To read up first, see
+                You can do it in the game, or under <Link href="/account?tab=characters">Characters on your profile</Link> here and download the file into the game. To
+                read up first, see
                 the <Link href="/compendium/classes">classes</Link> and <Link href="/compendium/spells">spells</Link>.
               </p>
             </>

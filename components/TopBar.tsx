@@ -24,9 +24,10 @@ interface Entry {
   heading?: string;
 }
 
-// Home and the adventures, then the one set of rules everyone plays by, everything a player uses,
-// the compendium of the game's own content, and the community. Pressing a heading goes to its
-// first entry.
+// Home, the adventures, the writer rankings, the one set of rules everyone plays by, the
+// compendium of the game's own content, and the community. A player's own things (characters,
+// favourites, settings) are under their picture at the right end instead. Pressing a heading goes
+// to its first entry.
 const groups: { label: string; entries: Entry[] }[] = [
   {
     label: "Home",
@@ -35,7 +36,7 @@ const groups: { label: string; entries: Entry[] }[] = [
       { href: "/news", label: "News", note: "Every post, newest first" },
       { heading: "Getting started", href: "/guide", label: "Guide for newcomers", note: "From here to a first adventure" },
       { href: "/faq", label: "FAQ", note: "Short answers" },
-      { href: "/play", label: "Download", note: "Get the game", shortcut: true },
+      { href: "/play", label: "Download", note: "Get the game" },
       { heading: "Site", href: "/status", label: "Server status", note: "Is the game server up" },
       { href: "/library", label: "Search", note: "Everything published", shortcut: true },
     ],
@@ -57,22 +58,21 @@ const groups: { label: string; entries: Entry[] }[] = [
     ],
   },
   {
+    label: "Rankings",
+    entries: [
+      { href: "/rankings", label: "Writers by score", note: "What their work has earned" },
+      { href: "/rankings?by=favourites", label: "By favourites", note: "Whose work players keep" },
+      { href: "/rankings?by=works", label: "By works", note: "Who has published most" },
+      { href: "/rankings?by=upvotes", label: "By up votes", note: "Votes for, not counting against" },
+      { href: "/adventures?sort=score", label: "Top adventures", note: "Single works by score", shortcut: true },
+    ],
+  },
+  {
     label: "Rules",
     entries: [
       { href: "/canon", label: "Canon", note: "What is up for review" },
       { href: "/faq#rules", label: "How the rules work", note: "One set for every adventure", shortcut: true },
       { href: "/faq#rules-change", label: "When the rules change", note: "What happens to characters", shortcut: true },
-    ],
-  },
-  {
-    label: "Players",
-    entries: [
-      { href: "/play", label: "Play", note: "In the browser, or download" },
-      { href: "/characters", label: "Character creator", note: "Make one, take it into the game" },
-      { href: "/compendium/classes", label: "Classes", note: "Features level by level", shortcut: true },
-      { href: "/compendium/spells", label: "Spells", note: "Every spell list", shortcut: true },
-      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear", shortcut: true },
-      { href: "/account", label: "Your account", note: "Your work and completions" },
     ],
   },
   {

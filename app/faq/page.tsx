@@ -28,7 +28,12 @@ export default function Faq() {
         {
           id: "account",
           title: "Do I need an account?",
-          body: <p>Not to play. You need one to vote, favourite on every device, publish, and have a profile.</p>,
+          body: (
+            <p>
+              Yes. You sign in to play, and the same account holds your characters, favourites, votes, published work and profile. <Link href="/login?mode=signup">Join</Link>{" "}
+              takes an email and a password.
+            </p>
+          ),
         },
         {
           id: "rules",
@@ -50,15 +55,15 @@ export default function Faq() {
           title: "Can I bring a character from one adventure to another?",
           body: (
             <p>
-              Yes. Characters belong to you, not to an adventure, and keep their gear. You can also make a new one for each game; the{" "}
-              <Link href="/characters">character creator</Link> works on the site too.
+              Yes. Characters belong to your account, not to an adventure, and keep their gear. You can also make a new one for each game, in the game or under{" "}
+              <Link href="/account?tab=characters">Characters on your profile</Link>.
             </p>
           ),
         },
         {
           id: "death",
           title: "What happens when a character dies?",
-          body: <p>By default they stay dead. An adventure or your own settings can soften that.</p>,
+          body: <p>They go down and make death saves. If they die, they can be brought back with a scroll, a spell, or at camp.</p>,
         },
         {
           id: "rules-change",

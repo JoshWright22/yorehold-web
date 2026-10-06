@@ -189,7 +189,7 @@ export default async function Home() {
         </Section>
 
         <aside className="home-side">
-          <Section title="Top writers">
+          <Section title="Top writers" more={{ href: "/rankings", label: "Rankings" }}>
             <RankList items={topWriters(items)} ranked empty="Writers show up here once their work is in the library." />
           </Section>
         </aside>

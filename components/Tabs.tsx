@@ -4,8 +4,17 @@
 
 import { useState, type ReactNode } from "react";
 
-export default function Tabs({ tabs, label }: { tabs: { id: string; label: string; count?: number; panel: ReactNode }[]; label: string }) {
-  const [current, setCurrent] = useState(tabs[0]?.id ?? "");
+export default function Tabs({
+  tabs,
+  label,
+  initial,
+}: {
+  tabs: { id: string; label: string; count?: number; panel: ReactNode }[];
+  label: string;
+  // The tab open at first, when an address asks for one.
+  initial?: string;
+}) {
+  const [current, setCurrent] = useState(tabs.some((tab) => tab.id === initial) ? initial! : (tabs[0]?.id ?? ""));
   return (
     <div className="tabs">
       <div className="tab-bar" role="tablist" aria-label={label}>

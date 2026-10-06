@@ -2841,6 +2841,118 @@ textarea::placeholder {
   max-width: 44rem;
 }
 
+/* Rankings: one row per writer, every row its own bar, the ranked column bright and the rest dim */
+
+.rank-tabs {
+  margin-bottom: var(--space-3);
+}
+
+.rank-kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-4);
+}
+
+.rank-kinds .filter-chip:hover,
+.rank-pages .filter-chip:hover {
+  text-decoration: none;
+}
+
+.rank-wrap {
+  overflow-x: auto;
+}
+
+.rank-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 2px;
+  font-size: 0.9rem;
+}
+
+.rank-table th {
+  padding: 0.3rem var(--space-3);
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rank-table th.num,
+.rank-table td.num {
+  text-align: right;
+}
+
+.rank-table td {
+  padding: 0.4rem var(--space-3);
+  background: var(--panel);
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.rank-table td:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.rank-table td:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.rank-table tr:hover td {
+  background: var(--ink-3);
+}
+
+.rank-table th.lit {
+  color: var(--text);
+}
+
+.rank-table td.lit {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.rank-place {
+  width: 3.5rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.rank-writer {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.rank-writer .avatar.small {
+  width: 1.6rem;
+  height: 1.6rem;
+  font-size: 0.75rem;
+}
+
+.rank-best a {
+  color: var(--muted);
+}
+
+.rank-pages {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+}
+
+@media (max-width: 760px) {
+  .rank-table .wide {
+    display: none;
+  }
+}
+
 /* Wiki pages: index, tags, curated lists and help. A contents box, then dense plain lists. */
 
 .index-toc {

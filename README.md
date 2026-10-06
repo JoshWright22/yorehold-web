@@ -78,16 +78,17 @@ The keys are only read by server code and never reach the browser.
 | `/u/<name>` | A profile: published work and completed adventures |
 | `/login` | Sign in, or sign up with `?mode=signup`, by email and password |
 | `/logout` | Signs out (POST) |
-| `/account` | The signed-in user's own name, content and completions, and a form to set a picture and a profile background. Both are cut to size in the browser and kept there (`lib/appearance.ts`) until the server stores them, so for now only their owner sees them. The background runs across the top of the profile and the picture shows over it and in the top right of the bar |
+| `/account` | The signed-in player's own page, in tabs (`?tab=` opens one): Characters (the creator, below), Favourites, Your content, Completed and Settings. Settings sets a picture and a profile background. Both are cut to size in the browser and kept there (`lib/appearance.ts`) until the server stores them, so for now only their owner sees them. The background runs across the top of the profile and the picture shows over it and in the top right of the bar |
 | `/play` | Placeholder for the browser build of the game, with the download link |
-| `/characters` | Character creator: name, race, class, background and ability scores (point buy, standard array or rolled) with the sheet beside them, all read from the game's ruleset files in `../yorehold-godot/assets`. Saves in the browser, or downloads the game's own character file (the format `CharacterChoices` reads) |
+| `/rankings` | Writers ranked by score, favourites, works or up votes (`?by=`), for all work, adventures or packs (`?kind=`), 50 to a page; counted from the catalogue until the server ranks writers itself |
+| `/characters` | Sends you to the Characters tab of `/account`. The character creator there: name, race, class, background and ability scores (point buy, standard array or rolled) with the sheet beside them, all read from the game's ruleset files in `../yorehold-godot/assets`. Saves in the browser, or downloads the game's own character file (the format `CharacterChoices` reads) |
 | `/forums` | Placeholder: the categories, "coming soon" |
 | `/canon` | Placeholder for the review queue |
 | `/docs` | The format docs from the game and framework repos |
 | `/status` | Whether the game server answers, and how fast |
 | `/site-rules`, `/terms`, `/privacy` | Placeholders: the text is not written yet |
 
-The top bar has Home (front page, news, getting started), Adventures (feeds and discovery), Rules, Players (everything a player uses, with the character creator), Compendium (every part of the game's own content) and Community (library, contributing, format docs, joining). They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it at once; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
+The top bar has Home (front page, news, getting started), Adventures (feeds and discovery), Rankings, Rules, Compendium (every part of the game's own content) and Community (library, contributing, format docs, joining). A player's own things (characters, favourites, their content, settings) are in the menu under their picture at the right end. They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it at once; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
 
 ## Layout
 

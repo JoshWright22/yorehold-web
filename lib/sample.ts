@@ -69,6 +69,39 @@ const rows: Row[] = [
   ["The Quiet Coast", "adventure", 5, ["coast", "exploration"], 1, 2, 9, 2, 34, "Map a stretch of shore where nobody has landed in fifty years."],
 ];
 
+// A longer tail of writers with one to three smaller works each, so lists and rankings have the
+// shape of a real library: a few well-known names, then many with a handful of votes.
+const tailWriters = [
+  "quietlantern", "Edda_Morrow", "thistlewick", "Corvin", "pagewright", "salt_and_ash", "Ilse Brand", "hearthkeeper",
+  "Wendel", "grimoire_gal", "Osric_Tal", "fernhollow", "Maud", "cinderfoot", "the_ninth_bell", "Rook",
+  "Pell Ardent", "mossback", "Yara_Linden", "ironquill", "Dunstan", "lowtide", "Briar", "starling_road",
+];
+
+const tailFirst = ["The Silent", "Beneath the", "A Lamp for the", "The Ninth", "Smoke over the", "The Hollow", "Ravens of the", "The Last", "Bells of the", "A Debt to the", "The Sunken", "Thorns in the"];
+const tailSecond = ["Abbey", "Mill", "Causeway", "Orchard", "Barrow", "Ferry", "Watchtower", "Vineyard", "Quarry", "Chapel", "Market", "Lighthouse"];
+const tailLines = [
+  "Someone has been taking the dead from the churchyard, and the gravedigger knows more than he says.",
+  "A short crawl for a new party, with one locked door nobody should open.",
+  "The town pays well for the job and asks no questions; that should worry you.",
+  "A trade dispute that turns into a siege by the second night.",
+  "Three days on the road with a witness the guild wants silenced.",
+  "An old map, a flooded cellar and a family that wants it all forgotten.",
+];
+const tailTags = [["mystery", "short"], ["horror", "dungeon"], ["intrigue", "city"], ["war", "siege"], ["travel", "escort"], ["dungeon", "coast"]];
+
+for (let w = 0; w < tailWriters.length; w++) {
+  authors.push({ id: "0b6d2f6e-1a3c-4e7a-9a51-3c2f0e8d1b" + String(w).padStart(2, "0"), name: tailWriters[w] });
+  const works = 1 + ((w * 7) % 3);
+  for (let n = 0; n < works; n++) {
+    const k = w * 3 + n;
+    // Each k gives its own pair of halves, so no two names (and so no two ids) collide.
+    const name = tailFirst[k % 12] + " " + tailSecond[((k % 12) + Math.floor(k / 12) * 7) % 12];
+    const low = 1 + ((k * 3) % 12);
+    const up = Math.max(2, Math.round(70 / (1 + w * 0.35)) - n * 6 + ((k * 13) % 9));
+    rows.push([name, "adventure", authors.length - 1, tailTags[k % tailTags.length], low, low + 2 + (k % 3), up, (k * 3) % 7, 3 + ((k * 11) % 60), tailLines[k % tailLines.length]]);
+  }
+}
+
 const today = Date.UTC(2026, 9, 5, 12);
 const day = 24 * 60 * 60 * 1000;
 
