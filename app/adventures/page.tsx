@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Form from "next/form";
 import { AdventureCard, FavouriteGrid, type CardItem } from "@/components/AdventureCard";
+import LevelBar from "@/components/LevelBar";
 import { FailureNotice } from "@/components/Notice";
 import { first } from "@/lib/format";
 import { contentSearch, contentSorts, type ContentItem, type ContentKind, type ContentSort } from "@/lib/server";
@@ -22,13 +23,14 @@ const shows: { id: Show; label: string }[] = [
   { id: "fav", label: "Favourites" },
 ];
 
-const levels: { id: string; label: string; min?: number; max?: number }[] = [
-  { id: "", label: "Any" },
-  { id: "1-4", label: "1 to 4", min: 1, max: 4 },
-  { id: "5-10", label: "5 to 10", min: 5, max: 10 },
-  { id: "11-16", label: "11 to 16", min: 11, max: 16 },
-  { id: "17-20", label: "17 to 20", min: 17, max: 20 },
-];
+// The ends of the level bar. The server allows up to 100, but adventures are written for 1 to 20.
+const lowest = 1;
+const highest = 20;
+
+function levelParam(value: string, fallback: number): number {
+  if (!/^\d{1,3}$/.test(value)) return fallback;
+  return Math.min(highest, Math.max(lowest, Number(value)));
+}
 
 // A starting set until the server can say which tags are used most.
 const tags = ["mystery", "horror", "dungeon", "city", "coast", "intrigue", "war", "travel", "dialogue", "short"];
@@ -51,19 +53,23 @@ export default async function Adventures({ searchParams }: { searchParams: Promi
   const text = first(query.q).trim().slice(0, 100);
   const tagText = first(query.tag).trim().toLowerCase();
   const tag = /^[a-z0-9 -]{1,32}$/.test(tagText) ? tagText : "";
-  const level = levels.find((option) => option.id === first(query.level)) ?? levels[0];
+  const minText = levelParam(first(query.min), lowest);
+  const maxText = levelParam(first(query.max), highest);
+  const levelMin = Math.min(minText, maxText);
+  const levelMax = Math.max(minText, maxText);
   const sortText = first(query.sort);
   const sort: ContentSort = contentSorts.includes(sortText as ContentSort) ? (sortText as ContentSort) : "score";
   const cursor = /^\d{1,9}$/.test(first(query.cursor)) ? first(query.cursor) : "";
 
   // The same search with one thing changed; changing a filter goes back to the first page.
-  const href = (change: { show?: Show; tag?: string; level?: string; sort?: ContentSort; cursor?: string }) => {
+  const href = (change: { show?: Show; tag?: string; sort?: ContentSort; cursor?: string }) => {
     const params = new URLSearchParams();
-    const next = { show, tag, level: level.id, sort, ...change };
+    const next = { show, tag, sort, ...change };
     if (text) params.set("q", text);
     if (next.show !== "adventure") params.set("show", next.show);
     if (next.tag) params.set("tag", next.tag);
-    if (next.level) params.set("level", next.level);
+    if (levelMin > lowest) params.set("min", String(levelMin));
+    if (levelMax < highest) params.set("max", String(levelMax));
     if (next.sort !== "score") params.set("sort", next.sort);
     if (change.cursor) params.set("cursor", change.cursor);
     const built = params.toString();
@@ -73,7 +79,7 @@ export default async function Adventures({ searchParams }: { searchParams: Promi
   const result =
     show === "fav"
       ? null
-      : await contentSearch({ kind: show as ContentKind, text, tag, levelMin: level.min, levelMax: level.max, sort, limit: pageSize, cursor });
+      : await contentSearch({ kind: show as ContentKind, text, tag, levelMin: levelMin > lowest ? levelMin : undefined, levelMax: levelMax < highest ? levelMax : undefined, sort, limit: pageSize, cursor });
 
   return (
     <>
@@ -85,7 +91,8 @@ export default async function Adventures({ searchParams }: { searchParams: Promi
           <input id="adv-q" type="search" name="q" defaultValue={text} placeholder="Search by name or description" maxLength={100} />
           {show !== "adventure" ? <input type="hidden" name="show" value={show} /> : null}
           {tag ? <input type="hidden" name="tag" value={tag} /> : null}
-          {level.id ? <input type="hidden" name="level" value={level.id} /> : null}
+          {levelMin > lowest ? <input type="hidden" name="min" value={levelMin} /> : null}
+          {levelMax < highest ? <input type="hidden" name="max" value={levelMax} /> : null}
           {sort !== "score" ? <input type="hidden" name="sort" value={sort} /> : null}
           <button type="submit" className="button primary">
             Search
@@ -108,11 +115,7 @@ export default async function Adventures({ searchParams }: { searchParams: Promi
               <div>
                 <dt>Level</dt>
                 <dd>
-                  {levels.map((option) => (
-                    <Link key={option.id} href={href({ level: option.id })} className={level.id === option.id ? "filter-chip active" : "filter-chip"}>
-                      {option.label}
-                    </Link>
-                  ))}
+                  <LevelBar lowest={lowest} highest={highest} min={levelMin} max={levelMax} />
                 </dd>
               </div>
               <div>

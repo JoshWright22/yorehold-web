@@ -1162,6 +1162,105 @@ button.chip.removable {
   text-decoration: none;
 }
 
+/* Level bar: two range inputs laid on one track. Only the handles take the pointer, so either
+   can be grabbed where they overlap the other input. */
+.level-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 30rem;
+}
+
+.level-track {
+  position: relative;
+  flex: 1;
+  height: 1.25rem;
+}
+
+.level-track::before {
+  content: "";
+  position: absolute;
+  /* inset by half a handle, where the handles' centres stop */
+  left: 7px;
+  right: 7px;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  /* hard stops: the chosen span in the accent, the rest in the line colour */
+  background: linear-gradient(
+    to right,
+    var(--line) var(--from),
+    var(--accent) var(--from),
+    var(--accent) var(--to),
+    var(--line) var(--to)
+  );
+}
+
+.level-track input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: none;
+}
+
+.level-track input:focus {
+  outline: none;
+}
+
+.level-track input::-webkit-slider-runnable-track {
+  background: none;
+}
+
+.level-track input::-moz-range-track {
+  background: none;
+}
+
+.level-track input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.level-track input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--bg);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.level-track input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.level-track input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.level-label {
+  min-width: 8.5rem;
+  color: var(--text);
+  font-size: 0.8rem;
+}
+
 .adv-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
