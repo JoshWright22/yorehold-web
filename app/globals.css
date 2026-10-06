@@ -1150,6 +1150,215 @@ button.chip.removable {
   font-weight: 600;
 }
 
+/* Adventures: a search panel with labelled rows of filters, then cards two to a line, each a
+   picture with the name on it over the details and the favourite and download buttons */
+
+.adv-search {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+  background: var(--panel);
+  border: var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.adv-search-form {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.adv-search-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 1rem;
+  font-size: 1.05rem;
+  background: var(--bg);
+  border-radius: var(--radius-pill);
+}
+
+.adv-filters {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.adv-filters > div {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.adv-filters dt {
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.adv-filters dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.adv-filters .filter-chip {
+  padding: 0.1rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.adv-filters .filter-chip:hover {
+  text-decoration: none;
+}
+
+.adv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.adv-card {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  background: var(--panel);
+  border: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.adv-cover {
+  grid-row: 1 / 3;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: flex-end;
+  min-height: 9rem;
+  padding: var(--space-3);
+  background: var(--bg-deep) var(--art) center / cover;
+  color: var(--paper);
+}
+
+.adv-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(30, 30, 30, 0.45);
+  transition: background var(--quick) var(--ease);
+}
+
+.adv-cover:hover {
+  text-decoration: none;
+}
+
+.adv-cover:hover::after {
+  background: rgba(30, 30, 30, 0.2);
+}
+
+.adv-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.adv-by {
+  margin: 0;
+  padding: var(--space-3) var(--space-3) 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.adv-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-1) var(--space-3) var(--space-3);
+}
+
+.adv-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-3);
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+.adv-meta .kind-mark {
+  margin-right: -0.4rem;
+}
+
+.adv-text {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--font-book, inherit);
+  font-size: 0.85rem;
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.adv-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: auto 0 0;
+  padding-top: var(--space-1);
+}
+
+.adv-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-right: auto;
+}
+
+.adv-score {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.adv-button {
+  padding: 0.2rem 0.75rem;
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.adv-button:hover {
+  border-color: var(--paper);
+  text-decoration: none;
+}
+
+.adv-button.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink-1);
+}
+
+.adv-pages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-5) 0 0;
+}
+
 /* Two small graphs side by side: the newest number large, the marks in the accent, the grid
    barely there */
 .home-graphs {
@@ -2464,8 +2673,20 @@ textarea::placeholder {
 
 @media (max-width: 860px) {
   .home-top,
-  .home-graphs {
+  .home-graphs,
+  .adv-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .adv-card {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+  }
+
+  .adv-filters > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
   }
 }
 

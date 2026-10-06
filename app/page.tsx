@@ -8,6 +8,7 @@ import { news } from "@/lib/news";
 import { rankedRows } from "@/lib/rows";
 import { contentSearch, downloadUrl, stats, type ContentItem } from "@/lib/server";
 import Graph from "@/components/Graph";
+import { artFor } from "@/lib/art";
 
 // Asked of the server on every visit, never baked in at build time.
 export const dynamic = "force-dynamic";
@@ -23,15 +24,6 @@ const kindFilters = [
   { label: "Adventures", kind: "adventure" },
   { label: "Definitions", kind: "definitions" },
 ];
-
-// Stand-in pictures until content carries its own cover; the same entry always gets the same one.
-const arts = ["ruins", "castle", "valley", "knights", "peaks", "dragon"];
-
-function artFor(item: ContentItem): string {
-  let hash = 0;
-  for (const char of item.id) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-  return arts[hash % arts.length];
-}
 
 // Top writers come from what the page already loaded, until the server ranks writers itself.
 function topWriters(items: ContentItem[]): RankItem[] {
@@ -55,7 +47,7 @@ function topWriters(items: ContentItem[]): RankItem[] {
 
 function Featured({ item }: { item: ContentItem }) {
   return (
-    <section className="feature" style={artStyle(artFor(item))}>
+    <section className="feature" style={artStyle(artFor(item.id))}>
       <p className="kicker">Top adventure</p>
       <h1>
         <Link href={"/c/" + encodeURIComponent(item.id)}>{item.name}</Link>
@@ -70,7 +62,7 @@ function Featured({ item }: { item: ContentItem }) {
       </p>
       <p className="feature-tags">
         {item.tags.map((tag) => (
-          <Chip key={tag} href={"/library?tag=" + encodeURIComponent(tag)}>
+          <Chip key={tag} href={"/adventures?tag=" + encodeURIComponent(tag)}>
             {tag}
           </Chip>
         ))}
@@ -108,7 +100,7 @@ function PopularRow({ items }: { items: ContentItem[] }) {
   return (
     <ol className="popular-row">
       {items.map((item, index) => (
-        <li key={item.id} style={artStyle(artFor(item))}>
+        <li key={item.id} style={artStyle(artFor(item.id))}>
           <Link href={"/c/" + encodeURIComponent(item.id)}>
             <span className="popular-rank num">{index + 2}</span>
             <span className="popular-name">{item.name}</span>
@@ -156,7 +148,7 @@ export default async function Home() {
       </div>
 
       {top.length > 1 ? (
-        <Section title="Popular adventures" note="ranked by score" more={{ href: "/library?kind=adventure&sort=score", label: "All adventures" }}>
+        <Section title="Popular adventures" note="ranked by score" more={{ href: "/adventures", label: "All adventures" }}>
           <PopularRow items={top.slice(1)} />
         </Section>
       ) : null}

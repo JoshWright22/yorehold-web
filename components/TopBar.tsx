@@ -34,7 +34,7 @@ const groups: { label: string; entries: Entry[] }[] = [
     label: "Players",
     entries: [
       { href: "/play", label: "Play", note: "In the browser, or download" },
-      { href: "/library?kind=adventure", label: "Adventures", note: "Written by players" },
+      { href: "/adventures?show=fav", label: "Favourites", note: "Adventures you kept" },
     ],
   },
   {
@@ -117,6 +117,16 @@ export default function TopBar() {
               <li className="top-group">
                 <Link href="/" className={pathname === "/" ? "top-head active" : "top-head"} aria-current={pathname === "/" ? "page" : undefined} onClick={pressed}>
                   Home
+                </Link>
+              </li>
+              <li className="top-group">
+                <Link
+                  href="/adventures"
+                  className={pathname === "/adventures" ? "top-head active" : "top-head"}
+                  aria-current={pathname === "/adventures" ? "page" : undefined}
+                  onClick={pressed}
+                >
+                  Adventures
                 </Link>
               </li>
               {groups.map((group) => {
