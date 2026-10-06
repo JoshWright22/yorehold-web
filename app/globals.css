@@ -436,7 +436,7 @@ summary:focus-visible {
   width: 100%;
   max-width: var(--page-width);
   margin: 0 auto;
-  padding: var(--space-3) var(--space-4) var(--space-8);
+  padding: var(--space-3) var(--space-4) var(--space-5);
 }
 
 .page-head {
@@ -545,8 +545,7 @@ summary:focus-visible {
 /* Footer: one line of the few links every page needs, and the name under it */
 
 .site-footer {
-  margin-top: var(--space-7);
-  padding: var(--space-5) var(--space-4) var(--space-6);
+  padding: var(--space-3) var(--space-4);
   border-top: var(--border);
   text-align: center;
   font-size: 0.875rem;
@@ -3213,7 +3212,7 @@ textarea::placeholder {
 
 @media (max-width: 600px) {
   .page {
-    padding: var(--space-2) var(--space-3) var(--space-7);
+    padding: var(--space-2) var(--space-3) var(--space-4);
   }
 
   .top-bar {
