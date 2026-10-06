@@ -60,7 +60,7 @@ The keys are only read by server code and never reach the browser.
 
 | Address | What is there |
 |---|---|
-| `/` | Featured (best scored) and newest content |
+| `/` | A short banner with Download and Play, then the newest 50 pieces of content as a ranked table (25 shown, filter chips by kind, columns that sort, click a row to open it). Beside it the news, the top writers and what is in the compendium |
 | `/library` | Search by text, kind, tag and level range, sorted by score, newest or name, with paging. Driven by the query string: `?q=&kind=&tag=&min=&max=&sort=&cursor=`. The page it gets is shown as a table that can be filtered and sorted in place, with the picked entry beside it |
 | `/compendium/<kind>` | The game's chapters, creatures, items, spells and classes as a filterable table with a stat block beside it; skins is an empty tab for now |
 | `/compendium/<kind>/<id>` | The same, with that entry picked |
@@ -82,14 +82,16 @@ app/                 the pages, one folder per address
 app/api/session/     GET who is signed in, POST sign in or sign up (sets the cookie)
 app/c/[id]/actions.ts  the vote and report server actions
 app/theme.css        the palette and the theme variables (colour, spacing, radii, shadows)
-components/ui.tsx    card, tab bar, filter bar, stat tile, stat block, button, chip, split view
+components/ui.tsx    card, tab bar, filter bar, stat tile, stat block, button, chip, split view, section, news list, rank list
 components/Browser.tsx  the list and detail browser: filter, sort, pick an entry
+components/RankedTable.tsx  the ranked table: filter chips, sorting, a row opens its page
 components/          also the top bar, footer, profile header, tabs, content and completion lists, the offline notice
 lib/server.ts        the one typed client for the server's RPCs; every call fails soft
 lib/session.ts       reads the session cookie
 lib/docs.ts          reads and renders the format docs
 lib/compendium.ts    reads the game's files into rows for the compendium
-lib/sheet.ts, rows.ts  the row and stat block data the browser shows
+lib/sheet.ts, rows.ts  the row and stat block data the browser and the ranked table show
+lib/news.ts          the news on the home page; add an entry at the top to post one
 ```
 
 Signing in keeps the server's session token in an httpOnly cookie (`yorehold_session`) that lasts as long as the token does.

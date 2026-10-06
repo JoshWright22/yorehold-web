@@ -564,7 +564,6 @@ button.chip.removable {
 .kind-spells { background: var(--kind-spells); }
 .kind-classes { background: var(--kind-classes); }
 .kind-skins { background: var(--kind-skins); }
-.kind-news { background: var(--cc-violet); }
 
 /* Stand-in cover art: a flat block with a big letter and a hard stripe */
 
@@ -604,29 +603,6 @@ button.chip.removable {
 }
 
 /* Cards */
-
-.card-row {
-  margin-top: var(--space-6);
-}
-
-.row-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
-  border-bottom: var(--border);
-  border-bottom-color: var(--line-soft);
-}
-
-.row-head h2 {
-  margin: 0 0 var(--space-2);
-}
-
-.row-head a {
-  font-weight: 700;
-  font-size: 0.9rem;
-}
 
 .card-grid,
 .category-list {
@@ -747,47 +723,6 @@ button.chip.removable {
   text-transform: uppercase;
 }
 
-.placeholder-card {
-  border-style: dashed;
-}
-
-/* Writers and compendium tiles on the home page */
-
-.writer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-  gap: var(--space-4);
-}
-
-.writer-card {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-1);
-  padding: var(--space-4);
-  background: var(--panel);
-  border: var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
-  color: var(--text);
-  text-align: center;
-  transition: transform 120ms ease, box-shadow 120ms ease;
-}
-
-.writer-card:hover {
-  text-decoration: none;
-  transform: translate(-3px, -3px);
-  box-shadow: var(--shadow-lg);
-}
-
-.writer-name {
-  font-weight: 800;
-}
-
-.writer-stats {
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
 .avatar {
   display: inline-grid;
   place-items: center;
@@ -817,112 +752,338 @@ button.chip.removable {
   box-shadow: var(--shadow);
 }
 
-.kind-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: var(--space-4);
-}
+/* Home page: a short banner, then the ranked table with a narrow column of lists beside it */
 
-.kind-tile {
-  display: grid;
-  padding: var(--space-3) var(--space-4);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  color: var(--ink-dark);
-  transition: transform 120ms ease, box-shadow 120ms ease;
-}
-
-.kind-tile:hover {
-  text-decoration: none;
-  transform: translate(-3px, -3px);
-  box-shadow: var(--shadow-lg);
-}
-
-.kind-count {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.kind-name {
-  font-weight: 800;
-  font-variant: small-caps;
-  letter-spacing: 0.04em;
-}
-
-/* Hero: the one place with gradients */
-
-.hero {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
+.home-banner {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-6);
-  padding: var(--space-7) var(--space-6);
-  border: var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  background:
-    radial-gradient(circle at 85% 20%, var(--cc-blue) 0%, transparent 38%),
-    linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 55%, var(--hero-to) 100%);
-  overflow: hidden;
+  gap: var(--space-3) var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-hair);
 }
 
-.hero h1 {
-  font-size: clamp(2.8rem, 7vw, 5rem);
-  line-height: 1;
-  margin-bottom: var(--space-4);
-  text-shadow: 5px 5px 0 var(--cc-black);
+.home-what {
+  flex: 0 1 40rem;
+  min-width: 0;
 }
 
-.hero-pitch {
-  max-width: 34rem;
-  font-size: 1.15rem;
+.home-what h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-1);
+  font-size: 1.7rem;
+  letter-spacing: 0.06em;
+}
+
+.home-what p {
+  max-width: 40rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+.home-buttons {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-1);
+}
+
+.home-platform {
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+
+.home-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 19rem;
+  gap: var(--space-5);
+  align-items: start;
+  margin-top: var(--space-4);
+}
+
+.home-side {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* Sections: a small heading on a rule */
+
+.section {
+  min-width: 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+  padding-bottom: 0.2rem;
+  border-bottom: var(--border-hair);
+  border-bottom-color: var(--line-soft);
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.section-note {
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+
+.section-head a {
+  margin-left: auto;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.list-empty {
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.875rem;
+}
+
+/* Ranked table */
+
+.ranked-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.1rem 0.55rem;
+  border: var(--border-hair);
+  border-radius: 2px;
+  background: var(--panel);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filter-chip .num {
+  color: var(--faint);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.filter-chip:hover {
   color: var(--text);
 }
 
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  margin: var(--space-5) 0 var(--space-3);
+.filter-chip.active {
+  background: var(--highlight);
+  color: var(--highlight-ink);
 }
 
-.hero-note {
+.filter-chip.active .num {
+  color: var(--cc-iron);
+}
+
+.ranked-wrap {
+  background: var(--panel);
+  border: var(--border-hair);
+}
+
+.ranked-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+.ranked-table th,
+.ranked-table td {
+  padding: 0.22rem var(--space-2);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* the header stays under the top bar while the rows scroll past */
+.ranked-table th {
+  position: sticky;
+  top: var(--bar-height);
+  z-index: 1;
+  background: var(--panel-sunk);
+  border-bottom-color: var(--line);
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+}
+
+.ranked-table .numeric {
+  text-align: right;
+}
+
+.ranked-table tbody tr {
+  cursor: pointer;
+}
+
+.ranked-table tbody tr:nth-child(even) {
+  background: var(--bg-deep);
+}
+
+.ranked-table tbody tr:hover {
+  background: var(--row-hover);
+}
+
+.ranked-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ranked-table .col-rank {
+  width: 2.2rem;
+  color: var(--faint);
+}
+
+.ranked-table td.col-name {
+  width: 34%;
+  white-space: normal;
+  font-weight: 700;
+}
+
+.ranked-table td.col-name a {
+  color: var(--text);
+}
+
+.ranked-table td.col-author a {
+  color: var(--muted);
+}
+
+.ranked-table td.col-kind {
+  color: var(--muted);
+}
+
+.ranked-table td.col-score {
+  color: var(--highlight);
+}
+
+.kind-mark {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.4rem;
+}
+
+.tag {
+  display: inline-block;
+  margin-right: 0.25rem;
+  padding: 0 0.3rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 2px;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.tag:hover {
+  color: var(--text);
+  border-color: var(--text);
+  text-decoration: none;
+}
+
+.ranked-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 0;
+  color: var(--faint);
+  font-size: 0.8rem;
+}
+
+.ranked-foot a {
+  font-weight: 700;
+}
+
+/* News and ranked lists */
+
+.news-list,
+.rank-list {
+  list-style: none;
   margin: 0;
+  padding: 0;
 }
 
-.hero-art {
-  position: relative;
-  height: 16rem;
+.news-list li {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--line-soft);
 }
 
-.hero-tile {
-  position: absolute;
-  border: var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+.news-list li:first-child {
+  padding-top: 0;
 }
 
-.hero-tile.t1 {
-  inset: 0 30% 30% 0;
-  background: linear-gradient(160deg, var(--cc-ochre), var(--cc-rust));
-  transform: rotate(-5deg);
+.news-list li:last-child {
+  border-bottom: none;
 }
 
-.hero-tile.t2 {
-  inset: 18% 0 12% 35%;
-  background: linear-gradient(160deg, var(--cc-sky), var(--cc-teal));
-  transform: rotate(4deg);
+.news-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
-.hero-tile.t3 {
-  inset: 58% 42% 0 12%;
-  background: linear-gradient(160deg, var(--cc-pink), var(--cc-mauve));
-  transform: rotate(-2deg);
+.news-title time {
+  flex: none;
+  color: var(--faint);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.news-line {
+  margin: 0.1rem 0 0;
+  color: var(--muted);
+  font-family: var(--font-book);
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.rank-list li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: 0.15rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 0.875rem;
+}
+
+.rank-list li:last-child {
+  border-bottom: none;
+}
+
+.rank {
+  flex: none;
+  width: 1.3rem;
+  color: var(--faint);
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.rank-note {
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+
+.rank-value {
+  margin-left: auto;
+  color: var(--text);
+  font-size: 0.8rem;
 }
 
 /* Tabs */
@@ -1671,8 +1832,8 @@ textarea::placeholder {
     width: 10rem;
   }
 
-  .kind-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .home-columns {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1740,13 +1901,18 @@ textarea::placeholder {
     position: static;
   }
 
-  .hero {
-    grid-template-columns: 1fr;
-    padding: var(--space-6) var(--space-5);
+  /* too narrow for every column, so the table scrolls sideways; a scrolling box cannot keep
+     the header stuck to the page, so it sits at the top of the table here */
+  .ranked-wrap {
+    overflow-x: auto;
   }
 
-  .hero-art {
-    display: none;
+  .ranked-table {
+    min-width: 42rem;
+  }
+
+  .ranked-table th {
+    position: static;
   }
 
   .footer-inner {
@@ -1773,14 +1939,6 @@ textarea::placeholder {
 
   .row-chips {
     display: none;
-  }
-
-  .kind-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .hero-actions .button {
-    flex: 1 1 100%;
   }
 
   .profile-row {

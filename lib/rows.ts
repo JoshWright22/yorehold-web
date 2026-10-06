@@ -1,8 +1,8 @@
 // Library content as rows for the list and detail browser.
 
 import type { ContentItem } from "./server";
-import type { Column, Row } from "./sheet";
-import { date, levelRange, score } from "./format";
+import type { Column, RankedRow, Row } from "./sheet";
+import { date, levelRange, profileHref, score } from "./format";
 
 export const contentColumns: Column[] = [
   { key: "score", label: "Score", numeric: true },
@@ -11,6 +11,26 @@ export const contentColumns: Column[] = [
   { key: "author", label: "By", wide: true },
   { key: "updated", label: "Updated", wide: true },
 ];
+
+// Rows for the ranked table. The best score is rank 1, and a tie goes to the newer one.
+export function rankedRows(items: ContentItem[]): RankedRow[] {
+  return [...items]
+    .sort((a, b) => b.score - a.score || b.createdAt - a.createdAt)
+    .map((item, index) => ({
+      id: item.id,
+      rank: index + 1,
+      name: item.name,
+      href: "/c/" + encodeURIComponent(item.id),
+      author: item.author.name || "unknown",
+      authorHref: profileHref(item.author),
+      kind: item.kind,
+      levelMin: item.levelMin,
+      levelMax: item.levelMax,
+      score: item.score,
+      revision: item.revision,
+      tags: item.tags,
+    }));
+}
 
 export function contentRow(item: ContentItem): Row {
   const href = "/c/" + encodeURIComponent(item.id);

@@ -3,6 +3,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
+import type { NewsItem } from "@/lib/news";
 import type { Pair, Sheet } from "@/lib/sheet";
 
 type Tone = "primary" | "secondary" | "danger" | "ghost";
@@ -103,16 +104,71 @@ export function Card({
   );
 }
 
-export function CardRow({ title, more, children }: { title: string; more?: { href: string; label: string }; children: ReactNode }) {
+// A titled part of a page: a small heading on a rule, with a link to the rest at its right end.
+export function Section({
+  title,
+  note,
+  more,
+  children,
+}: {
+  title: string;
+  note?: string;
+  more?: { href: string; label: string };
+  children: ReactNode;
+}) {
   return (
-    <section className="card-row">
-      <header className="row-head">
+    <section className="section">
+      <header className="section-head">
         <h2>{title}</h2>
+        {note ? <span className="section-note">{note}</span> : null}
         {more ? <Link href={more.href}>{more.label}</Link> : null}
       </header>
       {children}
     </section>
   );
+}
+
+// News as a plain list: title, the day it was posted, one line.
+export function NewsList({ items, empty }: { items: NewsItem[]; empty: string }) {
+  if (items.length === 0) return <p className="list-empty">{empty}</p>;
+  return (
+    <ul className="news-list">
+      {items.map((item) => (
+        <li key={item.day + item.title}>
+          <p className="news-title">
+            {item.href ? <Link href={item.href}>{item.title}</Link> : item.title}
+            <time className="num" dateTime={item.day}>
+              {item.day}
+            </time>
+          </p>
+          <p className="news-line">{item.line}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export interface RankItem {
+  href: string;
+  label: string;
+  // The number at the right end of the line.
+  value: string;
+  // Small print between the name and the number.
+  note?: string;
+}
+
+// A list of links with a number each. Ranked lists count their lines.
+export function RankList({ items, ranked, empty }: { items: RankItem[]; ranked?: boolean; empty: string }) {
+  if (items.length === 0) return <p className="list-empty">{empty}</p>;
+  const lines = items.map((item, index) => (
+    <li key={item.href}>
+      {ranked ? <span className="rank num">{index + 1}</span> : null}
+      <Link href={item.href}>{item.label}</Link>
+      {item.note ? <span className="rank-note">{item.note}</span> : null}
+      <span className="rank-value num">{item.value}</span>
+    </li>
+  ));
+  return ranked ? <ol className="rank-list">{lines}</ol> : <ul className="rank-list">{lines}</ul>;
 }
 
 export function TabBar({ tabs, label }: { tabs: { href: string; label: string; active: boolean; count?: number }[]; label: string }) {

@@ -1,133 +1,109 @@
-import Link from "next/link";
-import ContentList from "@/components/ContentList";
 import { FailureNotice } from "@/components/Notice";
-import { Button, CardRow, Cover } from "@/components/ui";
+import RankedTable from "@/components/RankedTable";
+import { Button, NewsList, RankList, Section, type RankItem } from "@/components/ui";
 import { compendiumKinds, loadKind } from "@/lib/compendium";
 import { profileHref, score } from "@/lib/format";
+import { news } from "@/lib/news";
+import { rankedRows } from "@/lib/rows";
 import { contentSearch, downloadUrl, type ContentItem } from "@/lib/server";
 
 // Asked of the server on every visit, never baked in at build time.
 export const dynamic = "force-dynamic";
 
-interface Writer {
-  id: string;
-  name: string;
-  works: number;
-  score: number;
-}
+// The most the server gives in one answer.
+const loaded = 50;
+
+const kindFilters = [
+  { label: "All", kind: "" },
+  { label: "Adventures", kind: "adventure" },
+  { label: "Rulesets", kind: "ruleset" },
+  { label: "Definitions", kind: "definitions" },
+];
 
 // Top writers come from what the page already loaded, until the server ranks writers itself.
-function topWriters(items: ContentItem[]): Writer[] {
-  const byId = new Map<string, Writer>();
-  const seen = new Set<string>();
+function topWriters(items: ContentItem[]): RankItem[] {
+  const byId = new Map<string, { id: string; name: string; works: number; score: number }>();
   for (const item of items) {
-    if (seen.has(item.id)) continue;
-    seen.add(item.id);
     const writer = byId.get(item.author.id) ?? { id: item.author.id, name: item.author.name || "unknown", works: 0, score: 0 };
     writer.works += 1;
     writer.score += item.score;
     byId.set(item.author.id, writer);
   }
-  return [...byId.values()].sort((a, b) => b.score - a.score || b.works - a.works).slice(0, 6);
+  return [...byId.values()]
+    .sort((a, b) => b.score - a.score || b.works - a.works)
+    .slice(0, 10)
+    .map((writer) => ({
+      href: profileHref(writer),
+      label: writer.name,
+      note: writer.works + (writer.works === 1 ? " work" : " works"),
+      value: score(writer.score),
+    }));
 }
 
 export default async function Home() {
-  // "Top rated" is the best-scored content until the canon process picks it.
-  const [featured, newest, counts] = await Promise.all([
-    contentSearch({ sort: "score", limit: 6 }),
-    contentSearch({ sort: "new", limit: 6 }),
+  const [latest, counts] = await Promise.all([
+    contentSearch({ sort: "new", limit: loaded }),
     Promise.all(compendiumKinds.map(async (kind) => ({ kind, count: (await loadKind(kind.id)).length }))),
   ]);
 
-  const writers = topWriters([...(featured.ok ? featured.data.content : []), ...(newest.ok ? newest.data.content : [])]);
+  const items = latest.ok ? latest.data.content : [];
 
   return (
     <>
-      <section className="hero">
-        <div className="hero-text">
-          <p className="kicker">Made by players, played with one set of rules</p>
-          <h1>Yorehold</h1>
-          <p className="hero-pitch">
-            Tactical fantasy adventures written and shared by players. Browse what others have made, vote on it, and
-            open it in the game.
-          </p>
-          <p className="hero-actions">
-            <Button href={downloadUrl()} big external>
+      <header className="home-banner">
+        <div className="home-what">
+          <h1>
+            <span className="brand-mark" aria-hidden="true">
+              Y
+            </span>
+            Yorehold
+          </h1>
+          <p>A turn-based fantasy game where players write the adventures and everyone plays by one set of rules.</p>
+        </div>
+        <div className="home-get">
+          <p className="home-buttons">
+            <Button href={downloadUrl()} external>
               Download
             </Button>
-            <Button href="/play" tone="secondary" big>
-              Play in the browser
+            <Button href="/play" tone="secondary">
+              Play
             </Button>
           </p>
-          <p className="hero-note">Free. Windows for now.</p>
+          <p className="home-platform">Free. Windows for now.</p>
         </div>
-        <div className="hero-art" aria-hidden="true">
-          <div className="hero-tile t1" />
-          <div className="hero-tile t2" />
-          <div className="hero-tile t3" />
-        </div>
-      </section>
+      </header>
 
-      <CardRow title="New chapters" more={{ href: "/library?sort=new", label: "See all" }}>
-        {newest.ok ? (
-          <ContentList items={newest.data.content} empty="Nothing has been published yet." />
-        ) : (
-          <FailureNotice failure={newest} what="the newest content" />
-        )}
-      </CardRow>
+      <div className="home-columns">
+        <Section title="Latest chapters" note={"the newest " + loaded + ", ranked by score"}>
+          {latest.ok ? (
+            <RankedTable
+              rows={rankedRows(items)}
+              filters={kindFilters}
+              more={{ href: "/library?sort=new", label: "More in the library" }}
+              empty="Nothing has been published yet."
+            />
+          ) : (
+            <FailureNotice failure={latest} what="the latest chapters" />
+          )}
+        </Section>
 
-      <CardRow title="Top rated" more={{ href: "/library", label: "See all" }}>
-        {featured.ok ? (
-          <ContentList items={featured.data.content} empty="Nothing has been published yet." />
-        ) : (
-          <FailureNotice failure={featured} what="top rated content" />
-        )}
-      </CardRow>
+        <aside className="home-side">
+          <Section title="News">
+            <NewsList items={news.slice(0, 5)} empty="No news yet." />
+          </Section>
 
-      <CardRow title="Top writers">
-        {writers.length > 0 ? (
-          <div className="writer-grid">
-            {writers.map((writer) => (
-              <Link key={writer.id} href={profileHref(writer)} className="writer-card">
-                <span className="avatar" aria-hidden="true">
-                  {writer.name[0]?.toUpperCase()}
-                </span>
-                <span className="writer-name">{writer.name}</span>
-                <span className="writer-stats num">
-                  {writer.works} {writer.works === 1 ? "work" : "works"}, {score(writer.score)}
-                </span>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <p className="empty">Writers show up here once their work is in the library.</p>
-        )}
-      </CardRow>
+          <Section title="Top writers">
+            <RankList items={topWriters(items)} ranked empty="Writers show up here once their work is in the library." />
+          </Section>
 
-      <CardRow title="In the compendium" more={{ href: "/compendium", label: "Open" }}>
-        <div className="kind-grid">
-          {counts.map(({ kind, count }) => (
-            <Link key={kind.id} href={"/compendium/" + kind.id} className={"kind-tile kind-" + kind.id}>
-              <span className="kind-count num">{count}</span>
-              <span className="kind-name">{kind.label}</span>
-            </Link>
-          ))}
-        </div>
-      </CardRow>
-
-      <CardRow title="News">
-        <div className="card-grid">
-          <article className="card placeholder-card">
-            <div className="card-cover">
-              <Cover kind="news" name="News" />
-            </div>
-            <div className="card-body">
-              <h3>No news yet</h3>
-              <p className="summary">Updates to the game and the site will be posted here.</p>
-            </div>
-          </article>
-        </div>
-      </CardRow>
+          <Section title="In the compendium" more={{ href: "/compendium", label: "Open" }}>
+            <RankList
+              items={counts.map(({ kind, count }) => ({ href: "/compendium/" + kind.id, label: kind.label, value: String(count) }))}
+              empty="The compendium is empty."
+            />
+          </Section>
+        </aside>
+      </div>
     </>
   );
 }

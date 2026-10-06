@@ -33,6 +33,23 @@ export interface Sheet {
   links?: { label: string; href: string; primary?: boolean }[];
 }
 
+// One line of the ranked table.
+export interface RankedRow {
+  id: string;
+  rank: number;
+  name: string;
+  href: string;
+  author: string;
+  authorHref: string;
+  kind: string;
+  // 0 means "any".
+  levelMin: number;
+  levelMax: number;
+  score: number;
+  revision: number;
+  tags: string[];
+}
+
 export interface Row {
   id: string;
   name: string;
