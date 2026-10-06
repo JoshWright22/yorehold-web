@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { FailureNotice } from "@/components/Notice";
 import RankedTable from "@/components/RankedTable";
-import { Button, NewsList, RankList, Section, type RankItem } from "@/components/ui";
+import { artStyle, Button, NewsList, RankList, Section, type RankItem } from "@/components/ui";
 import { compendiumKinds, loadKind } from "@/lib/compendium";
 import { profileHref, score } from "@/lib/format";
 import { news } from "@/lib/news";
@@ -50,28 +51,31 @@ export default async function Home() {
 
   return (
     <>
-      <header className="home-banner">
-        <div className="home-what">
-          <h1>
-            <span className="brand-mark" aria-hidden="true">
-              Y
-            </span>
-            Yorehold
-          </h1>
-          <p>A turn-based fantasy game where players write the adventures and everyone plays by one set of rules.</p>
-        </div>
-        <div className="home-get">
-          <p className="home-buttons">
-            <Button href={downloadUrl()} external>
+      <header className="hero" style={artStyle("dragon")}>
+        <p className="kicker">Yorehold, a turn-based fantasy game</p>
+        <h1>Players write the adventures.</h1>
+        <div className="hero-foot">
+          <p className="hero-line">Everyone plays by one set of rules. Pick an adventure from the library, or write your own and publish it.</p>
+          <div className="hero-get">
+            <Button href={downloadUrl()} big external>
               Download
             </Button>
-            <Button href="/play" tone="secondary">
+            <Button href="/play" tone="secondary" big>
               Play
             </Button>
-          </p>
-          <p className="home-platform">Free. Windows for now.</p>
+            <p className="hero-platform">Free. Windows for now.</p>
+          </div>
         </div>
       </header>
+
+      <nav className="figures" aria-label="In the compendium">
+        {counts.map(({ kind, count }) => (
+          <Link key={kind.id} href={"/compendium/" + kind.id}>
+            <span className="figure-label">{kind.label}</span>
+            <span className="figure-value">{count}</span>
+          </Link>
+        ))}
+      </nav>
 
       <div className="home-columns">
         <Section title="Latest chapters" note={"the newest " + loaded + ", ranked by score"}>
@@ -94,13 +98,6 @@ export default async function Home() {
 
           <Section title="Top writers">
             <RankList items={topWriters(items)} ranked empty="Writers show up here once their work is in the library." />
-          </Section>
-
-          <Section title="In the compendium" more={{ href: "/compendium", label: "Open" }}>
-            <RankList
-              items={counts.map(({ kind, count }) => ({ href: "/compendium/" + kind.id, label: kind.label, value: String(count) }))}
-              empty="The compendium is empty."
-            />
           </Section>
         </aside>
       </div>

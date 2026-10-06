@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageHead } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Canon" };
 
 export default function Canon() {
   return (
     <>
-      <h1>Canon</h1>
+      <PageHead title="Canon" kicker="Review queue" art="ruins" />
       <div className="placeholder">
         <h2>The review queue will be here</h2>
         <p>

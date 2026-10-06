@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHead } from "@/components/ui";
 import { downloadUrl } from "@/lib/server";
 
 export const metadata: Metadata = { title: "Play" };
@@ -6,7 +7,7 @@ export const metadata: Metadata = { title: "Play" };
 export default function Play() {
   return (
     <>
-      <h1>Play</h1>
+      <PageHead title="Play" kicker="In the browser" art="knights" />
       <div className="placeholder">
         <h2>The game will run here</h2>
         <p>
@@ -19,7 +20,7 @@ export default function Play() {
             Download Yorehold
           </a>
         </p>
-        <p className="muted">Windows only for now.</p>
+        <p className="muted small">Windows only for now.</p>
       </div>
     </>
   );

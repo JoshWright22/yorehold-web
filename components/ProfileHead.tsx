@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { StatTile } from "./ui";
+import { artStyle, StatTile } from "./ui";
 
-// The top of a profile: a cover banner, the avatar over its edge, the name and a row of numbers.
-// There is no uploaded art yet, so both are flat placeholders.
+// The top of a profile: a cover picture, the avatar over its lower edge, the name and a row of
+// numbers. Nobody can upload art yet, so every profile gets the same picture and a letter.
 export default function ProfileHead({
   name,
   kicker,
@@ -16,7 +16,7 @@ export default function ProfileHead({
 }) {
   return (
     <header className="profile-head">
-      <div className="profile-banner" aria-hidden="true" />
+      <div className="banner profile-banner" style={artStyle("peaks")} aria-hidden="true" />
       <div className="profile-row">
         <span className="avatar large" aria-hidden="true">
           {(name.trim()[0] ?? "?").toUpperCase()}

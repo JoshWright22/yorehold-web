@@ -1,7 +1,7 @@
 // The site's building blocks. None of them hold state, so pages on the server and the client
 // browser can both use them.
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 import type { NewsItem } from "@/lib/news";
 import type { Pair, Sheet } from "@/lib/sheet";
@@ -49,7 +49,7 @@ export function Chip({ kind, href, children }: { kind?: string; href?: string; c
   return <span className={className}>{children}</span>;
 }
 
-// Stand-in art: a flat block in the kind's colour with the entry's first letter.
+// Stand-in art: a flat block with the entry's first letter and a dot in the kind's colour.
 export function Cover({ kind, name, tall }: { kind: string; name: string; tall?: boolean }) {
   return (
     <div className={"cover kind-" + kind + (tall ? " tall" : "")} aria-hidden="true">
@@ -289,9 +289,15 @@ export function StatBlock({ sheet, children }: { sheet: Sheet; children?: ReactN
   );
 }
 
-export function PageHead({ title, kicker, children }: { title: string; kicker?: string; children?: ReactNode }) {
+// The picture behind a banner. `art` is a file name in public/art; the stylesheet draws it.
+export function artStyle(art: string): CSSProperties {
+  return { "--art": `url(/art/${art}.jpg)` } as CSSProperties;
+}
+
+// With `art` the heading sits on a picture; without, it is plain type on the page.
+export function PageHead({ title, kicker, art, children }: { title: string; kicker?: string; art?: string; children?: ReactNode }) {
   return (
-    <header className="page-head">
+    <header className={art ? "page-head banner" : "page-head"} style={art ? artStyle(art) : undefined}>
       {kicker ? <p className="kicker">{kicker}</p> : null}
       <h1>{title}</h1>
       {children}

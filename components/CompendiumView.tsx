@@ -25,7 +25,7 @@ export default async function CompendiumView({ kind, selectedId }: { kind: KindI
 
   return (
     <>
-      <PageHead title="Compendium" kicker="The game's own content">
+      <PageHead title="Compendium" kicker="The game's own content" art="castle">
         <p className="muted">Everything that ships with Yorehold, straight from the game&apos;s files.</p>
       </PageHead>
       <TabBar tabs={tabs} label="Kinds of entry" />

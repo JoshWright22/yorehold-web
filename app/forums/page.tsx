@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageHead } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Forums" };
 
@@ -15,15 +16,14 @@ const categories = [
 export default function Forums() {
   return (
     <>
-      <h1>Forums</h1>
-      <p className="notice">Coming soon. Discussion will be kept per category and per content item.</p>
-      <ul className="category-list">
+      <PageHead title="Forums" kicker="Not open yet">
+        <p className="muted">Discussion will be kept per category and per content item.</p>
+      </PageHead>
+      <ul className="forum-list">
         {categories.map((category) => (
-          <li key={category.name} className="card">
-            <div className="card-body">
-              <h3>{category.name}</h3>
-              <p className="summary">{category.about}</p>
-            </div>
+          <li key={category.name}>
+            <h3>{category.name}</h3>
+            <p>{category.about}</p>
             <span className="soon">coming soon</span>
           </li>
         ))}

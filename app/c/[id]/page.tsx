@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FailureNotice } from "@/components/Notice";
-import { Button, Chip, Cover, StatBlock, StatTile } from "@/components/ui";
+import { artStyle, Button, Chip, StatBlock, StatTile } from "@/components/ui";
 import { date, fileSize, first, levelRange, profileHref, score, webUrl } from "@/lib/format";
 import { Codes, contentGet, downloadUrl, isId } from "@/lib/server";
 import { getSession } from "@/lib/session";
@@ -55,23 +55,20 @@ export default async function ContentPage({ params, searchParams }: Props) {
 
   return (
     <article className="content-page">
-      <div className="content-banner">
-        <Cover kind={content.kind} name={content.name} tall />
-      </div>
+      {/* No uploaded art yet, so every content page gets the same picture. */}
+      <header className="page-head banner" style={artStyle("ruins")}>
+        <p className="chips">
+          <Chip kind={content.kind}>{content.kind}</Chip>
+          {content.hidden ? <Chip kind="hidden">hidden by a moderator</Chip> : null}
+        </p>
+        <h1>{content.name}</h1>
+        <p className="byline">
+          by <Link href={profileHref(content.author)}>{content.author.name || "unknown"}</Link>
+        </p>
+      </header>
 
       <div className="content-layout">
         <div className="content-main">
-          <header className="page-head">
-            <p className="chips">
-              <Chip kind={content.kind}>{content.kind}</Chip>
-              {content.hidden ? <Chip kind="hidden">hidden by a moderator</Chip> : null}
-            </p>
-            <h1>{content.name}</h1>
-            <p className="byline">
-              by <Link href={profileHref(content.author)}>{content.author.name || "unknown"}</Link>
-            </p>
-          </header>
-
           <div className="stat-tiles">
             <StatTile label="Score" value={score(content.score)} tone="gold" />
             <StatTile label="Levels" value={levelRange(content).replace(/^Levels? /, "")} />

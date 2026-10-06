@@ -59,6 +59,9 @@ export default function SiteFooter() {
           </nav>
         ))}
       </div>
+      <p className="footer-word" aria-hidden="true">
+        Yorehold
+      </p>
     </footer>
   );
 }

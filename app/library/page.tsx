@@ -63,7 +63,7 @@ export default async function Library({ searchParams }: { searchParams: Promise<
 
   return (
     <>
-      <PageHead title="Library" kicker="Made by players">
+      <PageHead title="Library" kicker="Made by players" art="valley">
         <p className="muted">
           Adventures, rulesets and definitions shared by players. The game&apos;s own content is in the{" "}
           <Link href="/compendium">compendium</Link>.

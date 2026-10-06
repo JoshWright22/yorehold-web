@@ -55,7 +55,7 @@ export function contentRow(item: ContentItem): Row {
         { label: "Rev", value: String(item.revision) },
       ],
       stats: [
-        { label: "Levels", value: levelRange(item) },
+        { label: "Levels", value: levelRange(item).replace(/^Levels? /, "") },
         { label: "Ruleset", value: item.rulesetVersion || "any" },
         { label: "Published", value: date(item.createdAt) },
         { label: "Updated", value: date(item.updatedAt) },

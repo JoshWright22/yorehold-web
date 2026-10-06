@@ -1,85 +1,53 @@
-/* The site's theme. Every colour on the site comes from this 29-colour palette; pages use the
-   named roles below, never a raw value. */
+/* The site's theme: two inks (charcoal and off-white), greys between them, and one accent taken
+   from the game's palette. Pages use the named roles below, never a raw value. */
 
 :root {
-  /* The palette */
-  --cc-cream: #f2f0e5;
-  --cc-silver: #b8b5b9;
-  --cc-grey: #868188;
-  --cc-iron: #646365;
-  --cc-slate: #45444f;
-  --cc-night: #3a3858;
-  --cc-black: #212123;
-  --cc-plum: #352b42;
-  --cc-indigo: #43436a;
-  --cc-blue: #4b80ca;
-  --cc-sky: #68c2d3;
-  --cc-mint: #a2dcc7;
-  --cc-butter: #ede19e;
-  --cc-ochre: #d3a068;
-  --cc-red: #b45252;
-  --cc-mauve: #6a536e;
-  --cc-dusk: #4b4158;
-  --cc-rust: #80493a;
-  --cc-tan: #a77b5b;
-  --cc-sand: #e5ceb4;
-  --cc-lime: #c2d368;
-  --cc-green: #8ab060;
-  --cc-teal: #567b79;
-  --cc-moss: #4e584a;
-  --cc-olive: #7b7243;
-  --cc-khaki: #b2b47e;
-  --cc-blush: #edc8c4;
-  --cc-pink: #cf8acb;
-  --cc-violet: #5f556a;
-
   /* Surfaces */
-  --bg: var(--cc-night);
-  --bg-deep: var(--cc-black);
-  --panel: var(--cc-plum);
-  --panel-raised: var(--cc-dusk);
-  --panel-sunk: var(--cc-black);
-  --row-hover: var(--cc-dusk);
-  --row-selected: var(--cc-indigo);
+  --ink-1: #1e1e1e;
+  --ink-2: #262626;
+  --ink-3: #303030;
+  --ink-4: #3d3d3d;
+  --paper: #f7f7f7;
+  --paper-2: #e9e9e9;
+  --bg: var(--ink-1);
+  --bg-deep: #171717;
+  --panel: var(--ink-2);
+  --panel-raised: var(--ink-3);
+  --panel-sunk: var(--bg-deep);
+  --row-hover: var(--ink-3);
+  --row-selected: var(--paper);
 
-  /* Ink */
-  --text: var(--cc-cream);
-  --muted: var(--cc-silver);
-  --faint: var(--cc-grey);
-  --ink-dark: var(--cc-black);
+  /* Text */
+  --text: var(--paper);
+  --muted: #b4b4b4;
+  --faint: #7d7d7d;
+  --ink-dark: var(--ink-1);
+  --ink-soft: #5c5c5c;
 
-  /* Lines and shadows: black, thick and hard */
-  --line: var(--cc-black);
-  --line-soft: var(--cc-slate);
-  --border: 3px solid var(--line);
-  --border-thin: 2px solid var(--line);
-  --border-hair: 1px solid var(--line);
-  --shadow-color: var(--cc-black);
-  --shadow-sm: 3px 3px 0 var(--shadow-color);
-  --shadow: 5px 5px 0 var(--shadow-color);
-  --shadow-lg: 8px 8px 0 var(--shadow-color);
+  /* Lines: thin and quiet, no shadows */
+  --line: #3a3a3a;
+  --line-soft: #2e2e2e;
+  --border: 1px solid var(--line);
+  --border-hair: 1px solid var(--line-soft);
 
-  /* Accents */
-  --accent: var(--cc-blue);
-  --accent-ink: var(--cc-cream);
-  --highlight: var(--cc-butter);
-  --highlight-ink: var(--cc-black);
-  --gold: var(--cc-ochre);
-  --link: var(--cc-sky);
-  --good: var(--cc-green);
-  --warn: var(--cc-ochre);
-  --bad: var(--cc-red);
+  /* The one accent: butter, from the game's palette. Used for scores, ranks and the picked sort. */
+  --accent: #ede19e;
+  --accent-ink: var(--ink-1);
+  --link: var(--paper);
+  --good: #a2dcc7;
+  --warn: #d3a068;
+  --bad: #e08a82;
 
-  /* Kinds of content, for chips and cover placeholders */
-  --kind-adventure: var(--cc-blue);
-  --kind-ruleset: var(--cc-green);
-  --kind-definitions: var(--cc-ochre);
-  --kind-chapters: var(--cc-blue);
-  --kind-creatures: var(--cc-red);
-  --kind-items: var(--cc-ochre);
-  --kind-spells: var(--cc-pink);
-  --kind-classes: var(--cc-teal);
-  --kind-skins: var(--cc-sky);
+  /* Kinds of content, shown only as a small dot beside the name */
+  --kind-adventure: #d3a068;
+  --kind-ruleset: #68c2d3;
+  --kind-definitions: #a2dcc7;
+  --kind-chapters: #ede19e;
+  --kind-creatures: #b45252;
+  --kind-items: #a77b5b;
+  --kind-spells: #cf8acb;
+  --kind-classes: #8ab060;
+  --kind-skins: #4b80ca;
 
   /* Spacing */
   --space-1: 0.25rem;
@@ -89,21 +57,31 @@
   --space-5: 1.5rem;
   --space-6: 2rem;
   --space-7: 3rem;
+  --space-8: 5rem;
 
-  /* Radii */
-  --radius-sm: 4px;
-  --radius: 8px;
-  --radius-lg: 14px;
+  /* Radii: tight on data, wide on pictures, round on anything pressed */
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 24px;
   --radius-pill: 999px;
 
-  /* Type */
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-book: Georgia, "Times New Roman", serif;
-  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  /* Type. The font variables are set on <html> by the layout; the lists after them are what
+     shows if a font did not load. */
+  --font: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-book: var(--font-serif), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-code), ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --display-tracking: -0.04em;
 
-  /* Layout */
-  --bar-height: 3.5rem;
-  --page-width: 80rem;
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --quick: 140ms;
+  --slow: 700ms;
+
+  /* Layout. The bar floats, so what sticks under it needs its height and its gap. */
+  --bar-height: 3.25rem;
+  --bar-gap: 0.75rem;
+  --bar-space: calc(var(--bar-height) + var(--bar-gap) * 2);
+  --page-width: 88rem;
 
   color-scheme: dark;
 }

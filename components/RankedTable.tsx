@@ -137,7 +137,7 @@ export default function RankedTable({
             </thead>
             <tbody>
               {shown.map((row) => (
-                <tr key={row.id} onClick={(event) => open(event, row)}>
+                <tr key={row.id} className={row.rank <= 3 ? "top" : undefined} onClick={(event) => open(event, row)}>
                   <td className="col-rank numeric num">{row.rank}</td>
                   <td className="col-name">
                     <Link href={row.href}>{row.name}</Link>

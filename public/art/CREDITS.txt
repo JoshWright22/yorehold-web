@@ -1,0 +1,7 @@
+Temporary art for banners and covers. Replace with the game's own art.
+castle.jpg: Willem Troost- fantasy Rhine landscape with castle town.jpg | Public domain | https://commons.wikimedia.org/wiki/File:Willem_Troost-_fantasy_Rhine_landscape_with_castle_town.jpg
+ruins.jpg: Lovro Janša - Fantazijska krajina z ruševinami gradu.jpg | Public domain | https://commons.wikimedia.org/wiki/File:Lovro_Jan%C5%A1a_-_Fantazijska_krajina_z_ru%C5%A1evinami_gradu.jpg
+valley.jpg: Gustave Courbet-Vallée de la Loue.jpg | Public domain | https://commons.wikimedia.org/wiki/File:Gustave_Courbet-Vall%C3%A9e_de_la_Loue.jpg
+peaks.jpg: Gustav Seelos - c124a44adb.jpg | Public domain | https://commons.wikimedia.org/wiki/File:Gustav_Seelos_-_c124a44adb.jpg
+knights.jpg: Knights in Armor, Warrior, Neptune Fountain (from Switzerland 1869 Sketchbook) MET 219114.jpg | CC0 | https://commons.wikimedia.org/wiki/File:Knights_in_Armor,_Warrior,_Neptune_Fountain_(from_Switzerland_1869_Sketchbook)_MET_219114.jpg
+dragon.jpg: St George Slaying the Dragon (replica od Middle Age painting, c. 1420).jpg | Public domain | https://commons.wikimedia.org/wiki/File:St_George_Slaying_the_Dragon_(replica_od_Middle_Age_painting,_c._1420).jpg

@@ -9,6 +9,9 @@ import { Chip, FilterBar, SplitView, StatBlock } from "./ui";
 
 type SortState = { key: string; up: boolean };
 
+// Up to this many values are shown as chips to press; more than that become a drop-down.
+const maxChips = 16;
+
 function compare(a: Row, b: Row, sort: SortState, numeric: boolean): number {
   let result: number;
   if (sort.key === "name") {
@@ -100,7 +103,7 @@ export default function Browser({
           <span>Filter</span>
           <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={placeholder} />
         </label>
-        {chipOptions.length > 0 ? (
+        {chipOptions.length > maxChips ? (
           <label className="filter-field">
             <span>{chipLabel}</span>
             <select value={chip} onChange={(event) => setChip(event.target.value)}>
@@ -136,7 +139,24 @@ export default function Browser({
           {shown.length}/{rows.length}
         </span>
       </FilterBar>
-      {chip ? (
+      {chipOptions.length > 0 && chipOptions.length <= maxChips ? (
+        <div className="chip-filters" role="group" aria-label={chipLabel}>
+          <button type="button" className={chip === "" ? "filter-chip active" : "filter-chip"} aria-pressed={chip === ""} onClick={() => setChip("")}>
+            Any {chipLabel.toLowerCase()}
+          </button>
+          {chipOptions.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={chip === option ? "filter-chip active" : "filter-chip"}
+              aria-pressed={chip === option}
+              onClick={() => setChip(chip === option ? "" : option)}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      ) : chip ? (
         <p className="active-chips">
           <button type="button" className="chip removable" onClick={() => setChip("")}>
             {chip} <span aria-hidden="true">{"×"}</span>
