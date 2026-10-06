@@ -80,9 +80,14 @@ export default function Contribute() {
           id: "rules",
           title: "Rules for content",
           body: (
-            <p>
-              Everything published follows the <Link href="/site-rules">site rules</Link>. Players can report entries that break them, and moderators can hide them.
-            </p>
+            <>
+              <p>
+                <strong>Write it yourself.</strong> We don&apos;t accept AI-written content: text, art, maps and voices all have to be made by people.
+              </p>
+              <p>
+                Everything published follows the <Link href="/site-rules">site rules</Link>. Players can report entries that break them, and moderators can hide them.
+              </p>
+            </>
           ),
         },
       ]}

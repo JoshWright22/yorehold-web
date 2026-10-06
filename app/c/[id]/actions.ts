@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { reportLabel } from "@/lib/reports";
 import { Codes, contentVote, isId, report, type VoteRequest } from "@/lib/server";
 import { getSession } from "@/lib/session";
 
@@ -39,7 +40,8 @@ export async function reportAction(formData: FormData): Promise<void> {
   if (!session) redirect(loginPath(reportPath));
   if (reason === "" || reason.length > 1000) redirect(reportPath + "?error=reason");
 
-  const result = await report("content", id, reason, session.token);
+  const kind = reportLabel(String(formData.get("kind") ?? ""));
+  const result = await report("content", id, "[" + kind + "] " + reason, session.token);
   if (!result.ok) {
     if (result.code === Codes.unauthenticated) redirect(loginPath(reportPath));
     redirect(reportPath + "?error=" + (result.offline ? "offline" : "failed"));

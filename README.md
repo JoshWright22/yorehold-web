@@ -86,7 +86,8 @@ The keys are only read by server code and never reach the browser.
 | `/canon` | Placeholder for the review queue |
 | `/docs` | The format docs from the game and framework repos |
 | `/status` | Whether the game server answers, and how fast |
-| `/site-rules`, `/terms`, `/privacy` | Placeholders: the text is not written yet |
+| `/site-rules` | The rules that already apply: published work must be made by people (no generated text, art, maps or voices), credit what you build on, and how reporting works. The report form (`/c/<id>/report`) asks for a reason from `lib/reports.ts` and puts it in front of the report text |
+| `/terms`, `/privacy` | Placeholders: the text is not written yet |
 
 The top bar has Home (front page, news, getting started), Adventures (feeds and discovery), Rankings, Rules, Compendium (every part of the game's own content) and Community (library, contributing, format docs, joining). A player's own things (characters, favourites, their content, settings) are in the menu under their picture at the right end. They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it at once; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
 

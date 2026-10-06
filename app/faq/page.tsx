@@ -86,9 +86,19 @@ export default function Faq() {
           ),
         },
         {
+          id: "ai",
+          title: "Can I publish something made with AI?",
+          body: (
+            <p>
+              No. We don&apos;t accept AI-written content; adventures, packs, art, maps and voices must be made by people. See the{" "}
+              <Link href="/site-rules#made-by-people">site rules</Link>.
+            </p>
+          ),
+        },
+        {
           id: "report",
           title: "Something in the library breaks the rules. What do I do?",
-          body: <p>Open its page and press Report. A moderator looks at every report.</p>,
+          body: <p>Open its page and press Report, and pick the reason, such as &quot;Made with AI&quot;. A moderator looks at every report.</p>,
         },
       ]}
     />

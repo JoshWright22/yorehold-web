@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { first } from "@/lib/format";
+import { reportKinds } from "@/lib/reports";
 import { isId } from "@/lib/server";
 import { getSession } from "@/lib/session";
 import { reportAction } from "../actions";
@@ -42,7 +43,8 @@ export default async function ReportPage({ params, searchParams }: Props) {
     <div className="narrow">
       <h1>Report</h1>
       <p className="muted">
-        Reporting <Link href={path}>{id}</Link>. Reports go to the moderators, not to the author.
+        Reporting <Link href={path}>{id}</Link>. Reports go to the moderators, not to the author. See the <Link href="/site-rules">site rules</Link> for
+        what is not allowed.
       </p>
       {error ? (
         <p className="notice error" role="alert">
@@ -51,6 +53,16 @@ export default async function ReportPage({ params, searchParams }: Props) {
       ) : null}
       <form action={reportAction} className="stack">
         <input type="hidden" name="id" value={id} />
+        <label>
+          What kind of problem?
+          <select name="kind" defaultValue={first(query.kind) || "other"}>
+            {reportKinds.map((kind) => (
+              <option key={kind.id} value={kind.id}>
+                {kind.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <label>
           What is wrong with it?
           <textarea name="reason" required maxLength={1000} rows={6} />
