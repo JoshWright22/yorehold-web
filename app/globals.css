@@ -271,6 +271,12 @@ summary:focus-visible {
   transition: opacity var(--quick) var(--ease), transform var(--quick) var(--ease), visibility 0s var(--quick);
 }
 
+/* the last list opens leftwards so it stays on screen in a narrow window */
+.top-group:last-child .top-drop {
+  left: auto;
+  right: -0.4rem;
+}
+
 .top-group:hover .top-drop,
 .top-group:focus-within .top-drop {
   visibility: visible;
@@ -481,7 +487,9 @@ summary:focus-visible {
 /* A picture behind a heading. The picture and its flat wash are two layers under the text, so
    the wash keeps any picture readable and the picture can ease into place on its own. */
 .banner,
-.hero {
+.hero,
+.feature,
+.popular-row li {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -495,7 +503,9 @@ summary:focus-visible {
 }
 
 .banner::before,
-.hero::before {
+.hero::before,
+.feature::before,
+.popular-row li::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -507,7 +517,9 @@ summary:focus-visible {
 }
 
 .banner::after,
-.hero::after {
+.hero::after,
+.feature::after,
+.popular-row li::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -534,7 +546,8 @@ summary:focus-visible {
 }
 
 .banner .kicker,
-.hero .kicker {
+.hero .kicker,
+.feature .kicker {
   color: var(--paper);
 }
 
@@ -991,41 +1004,150 @@ button.chip.removable {
   border: 6px solid var(--bg);
 }
 
-/* Home page: the picture and the headline, the counts, then the ranked table with lists beside it */
+/* Home page: the top adventure on a picture with the news beside it, the next most popular as a
+   row of pictures, the counts, then the ranked table with the top writers beside it */
 
-.hero {
-  min-height: min(38rem, calc(100vh - var(--bar-space) - 7rem));
+.home-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20rem;
+  gap: var(--space-6);
+  align-items: stretch;
+  margin-bottom: var(--space-6);
+}
+
+.feature {
+  min-height: 26rem;
+  margin: 0;
   padding: var(--space-6);
 }
 
-.hero h1 {
-  max-width: 11ch;
+.feature h1 {
+  max-width: 16ch;
   margin: 0;
-  font-size: clamp(3.2rem, 9.5vw, 9rem);
-  line-height: 0.86;
-  letter-spacing: -0.055em;
+  font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
 }
 
-.hero-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-4) var(--space-6);
-  margin-top: var(--space-6);
+.feature h1 a {
+  color: var(--paper);
 }
 
-.hero-line {
-  max-width: 30rem;
-  margin: 0;
-  font-size: 1.15rem;
+.feature-line {
+  max-width: 34rem;
+  margin: var(--space-3) 0 0;
+  font-size: 1.1rem;
   line-height: 1.35;
 }
 
-.hero-get {
+.feature-meta {
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-3) 0 0;
+  color: var(--paper-2);
+  font-size: 0.9rem;
+}
+
+.feature-meta a {
+  color: var(--paper);
+}
+
+.feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: var(--space-3) 0 0;
+}
+
+.feature-get,
+.home-get {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+}
+
+.home-news {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.home-news .section-head h2 {
+  font-size: 1.15rem;
+}
+
+.home-get {
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: var(--border);
+}
+
+.popular-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-6);
+  padding: 0;
+  list-style: none;
+}
+
+.popular-row li {
+  min-height: 9.5rem;
+  margin: 0;
+  border-radius: var(--radius);
+}
+
+.popular-row li::after {
+  transition: background var(--quick) var(--ease);
+}
+
+.popular-row li:hover::after {
+  background: rgba(30, 30, 30, 0.4);
+}
+
+.popular-row a {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 1fr auto auto;
+  column-gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--paper);
+}
+
+.popular-row a:hover {
+  text-decoration: none;
+}
+
+.popular-rank {
+  grid-column: 1 / -1;
+  font-size: 0.8rem;
+  color: var(--paper-2);
+}
+
+.popular-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.popular-by {
+  grid-column: 1;
+  color: var(--paper-2);
+  font-size: 0.78rem;
+}
+
+.popular-score {
+  grid-column: 2;
+  grid-row: 2 / 4;
+  align-self: end;
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .hero-platform {
@@ -2209,9 +2331,54 @@ textarea::placeholder {
   .home-columns {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .home-top {
+    grid-template-columns: minmax(0, 1fr) 16rem;
+    gap: var(--space-4);
+  }
+
+  .popular-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-@media (max-width: 960px) {
+@media (max-width: 860px) {
+  .home-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The headings keep their place in the bar; the search and then the name give way first. */
+@media (max-width: 960px) and (min-width: 641px) {
+  .top-search {
+    display: none;
+  }
+
+  .top-bar-inner {
+    gap: var(--space-3);
+  }
+
+  .top-head {
+    padding: 0.35rem 0.6rem;
+  }
+}
+
+@media (max-width: 800px) and (min-width: 641px) {
+  .brand-name {
+    display: none;
+  }
+
+  .top-head {
+    padding: 0.35rem 0.45rem;
+    font-size: 0.875rem;
+  }
+
+  .top-links {
+    gap: 0;
+  }
+}
+
+@media (max-width: 640px) {
   .menu-button {
     display: block;
   }
@@ -2352,17 +2519,17 @@ textarea::placeholder {
   }
 
   .banner,
-  .hero {
+  .feature {
     padding: var(--space-4);
     border-radius: var(--radius);
   }
 
-  .hero {
-    min-height: 30rem;
+  .feature {
+    min-height: 22rem;
   }
 
-  .hero-get {
-    flex-wrap: wrap;
+  .popular-row {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* two to a line, and the rule between lines replaces the one beside each count */

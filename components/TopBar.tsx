@@ -1,10 +1,12 @@
 "use client";
 
 // The bar at the top of every page. Each heading opens a list of everything under it when it is
-// pointed at or reached by keyboard. On a phone the headings, search and account fold into one
-// menu with every list laid open, and it closes again whenever the page changes.
+// pointed at or reached by keyboard. Every heading stays in the bar down to a half-width window;
+// only on a phone do the headings, search and account fold into one menu with every list laid
+// open, and it closes again whenever the page changes.
 
 import Link from "next/link";
+import Form from "next/form";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import NavSession from "./NavSession";
@@ -41,7 +43,7 @@ const groups: { label: string; entries: Entry[] }[] = [
     entries: [
       { href: "/docs", label: "Format docs", note: "How content files are written" },
       { href: "/compendium/creatures", label: "Creatures", note: "Stat blocks and behaviour" },
-      { href: "/compendium/chapters", label: "Chapters", note: "The game's own, as examples" },
+      { href: "/compendium/chapters", label: "Chapter examples", note: "Adventure parts for designers" },
       { href: "/library?kind=definitions", label: "Definitions", note: "Homebrew packs to build on" },
       { href: "/compendium/skins", label: "Skins", note: "Looks for the game" },
     ],
@@ -94,11 +96,11 @@ export default function TopBar() {
   return (
     <header className="top-bar">
       <div className="top-bar-inner">
-        <Link href="/" className="brand">
+        <Link href="/" className="brand" aria-label="Yorehold">
           <span className="brand-mark" aria-hidden="true">
             Y
           </span>
-          Yorehold
+          <span className="brand-name">Yorehold</span>
         </Link>
         <button
           type="button"
@@ -113,6 +115,11 @@ export default function TopBar() {
         <div id="site-menu" className={open ? "top-menu open" : "top-menu"}>
           <nav aria-label="Main" onMouseLeave={() => setShut(false)}>
             <ul className={shut ? "top-links shut" : "top-links"}>
+              <li className="top-group">
+                <Link href="/" className={pathname === "/" ? "top-head active" : "top-head"} aria-current={pathname === "/" ? "page" : undefined} onClick={pressed}>
+                  Home
+                </Link>
+              </li>
               {groups.map((group) => {
                 const active = group.entries.some((entry) => claims(entry, pathname));
                 return (
@@ -140,12 +147,12 @@ export default function TopBar() {
               })}
             </ul>
           </nav>
-          <form method="get" action="/library" className="top-search" role="search">
+          <Form action="/library" className="top-search" role="search">
             <label className="sr-only" htmlFor="top-search">
               Search the library
             </label>
             <input id="top-search" type="search" name="q" placeholder="Search the library" maxLength={100} />
-          </form>
+          </Form>
           <NavSession />
         </div>
       </div>

@@ -4,7 +4,6 @@
 import type {
   Completion,
   CompletionsListResponse,
-  ConfigResponse,
   ContentGetResponse,
   ContentItem,
   ContentKind,
@@ -138,8 +137,7 @@ export function sampleRpc(id: string, payload: object): unknown {
     }
     case "completions_list":
       return completions(String(body.userId ?? ""));
-    case "config":
-      return { sample: true } satisfies ConfigResponse;
+    // config is left out on purpose: the status page asks it to learn whether the server is up.
     default:
       return null;
   }

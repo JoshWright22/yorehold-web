@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { FailureNotice } from "@/components/Notice";
 import RankedTable from "@/components/RankedTable";
-import { artStyle, Button, NewsList, RankList, Section, type RankItem } from "@/components/ui";
+import { artStyle, Button, Chip, NewsList, RankList, Section, type RankItem } from "@/components/ui";
 import { compendiumKinds, loadKind } from "@/lib/compendium";
-import { profileHref, score } from "@/lib/format";
+import { levelRange, profileHref, score } from "@/lib/format";
 import { news } from "@/lib/news";
 import { rankedRows } from "@/lib/rows";
 import { contentSearch, downloadUrl, type ContentItem } from "@/lib/server";
@@ -14,12 +14,24 @@ export const dynamic = "force-dynamic";
 // The most the server gives in one answer.
 const loaded = 50;
 
+// The top adventure is the big picture; the next ones are the row under it.
+const popularShown = 5;
+
 const kindFilters = [
   { label: "All", kind: "" },
   { label: "Adventures", kind: "adventure" },
   { label: "Rulesets", kind: "ruleset" },
   { label: "Definitions", kind: "definitions" },
 ];
+
+// Stand-in pictures until content carries its own cover; the same entry always gets the same one.
+const arts = ["ruins", "castle", "valley", "knights", "peaks", "dragon"];
+
+function artFor(item: ContentItem): string {
+  let hash = 0;
+  for (const char of item.id) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return arts[hash % arts.length];
+}
 
 // Top writers come from what the page already loaded, until the server ranks writers itself.
 function topWriters(items: ContentItem[]): RankItem[] {
@@ -41,32 +53,112 @@ function topWriters(items: ContentItem[]): RankItem[] {
     }));
 }
 
+function Featured({ item }: { item: ContentItem }) {
+  return (
+    <section className="feature" style={artStyle(artFor(item))}>
+      <p className="kicker">Top adventure</p>
+      <h1>
+        <Link href={"/c/" + encodeURIComponent(item.id)}>{item.name}</Link>
+      </h1>
+      <p className="feature-line">{item.description}</p>
+      <p className="feature-meta">
+        <span>
+          by <Link href={profileHref(item.author)}>{item.author.name || "unknown"}</Link>
+        </span>
+        <span>{levelRange(item)}</span>
+        <span className="num">{score(item.score)}</span>
+      </p>
+      <p className="feature-tags">
+        {item.tags.map((tag) => (
+          <Chip key={tag} href={"/library?tag=" + encodeURIComponent(tag)}>
+            {tag}
+          </Chip>
+        ))}
+      </p>
+      <div className="feature-get">
+        <Button href={"/c/" + encodeURIComponent(item.id)}>Open</Button>
+        <Button href={downloadUrl()} tone="secondary" external>
+          Download the game
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+// What the page leads with when nothing is in the library yet, or the server is away.
+function Intro() {
+  return (
+    <section className="feature" style={artStyle("dragon")}>
+      <p className="kicker">Yorehold, a turn-based fantasy game</p>
+      <h1>Players write the adventures.</h1>
+      <p className="feature-line">Pick an adventure from the library, or write your own and publish it.</p>
+      <div className="feature-get">
+        <Button href={downloadUrl()} external>
+          Download
+        </Button>
+        <Button href="/play" tone="secondary">
+          Play
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+function PopularRow({ items }: { items: ContentItem[] }) {
+  return (
+    <ol className="popular-row">
+      {items.map((item, index) => (
+        <li key={item.id} style={artStyle(artFor(item))}>
+          <Link href={"/c/" + encodeURIComponent(item.id)}>
+            <span className="popular-rank num">{index + 2}</span>
+            <span className="popular-name">{item.name}</span>
+            <span className="popular-by">
+              {item.author.name || "unknown"} · {levelRange(item)}
+            </span>
+            <span className="popular-score num">{score(item.score)}</span>
+          </Link>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export default async function Home() {
-  const [latest, counts] = await Promise.all([
+  const [popular, latest, counts] = await Promise.all([
+    contentSearch({ kind: "adventure", sort: "score", limit: popularShown }),
     contentSearch({ sort: "new", limit: loaded }),
     Promise.all(compendiumKinds.map(async (kind) => ({ kind, count: (await loadKind(kind.id)).length }))),
   ]);
 
+  const top = popular.ok ? popular.data.content : [];
   const items = latest.ok ? latest.data.content : [];
 
   return (
     <>
-      <header className="hero" style={artStyle("dragon")}>
-        <p className="kicker">Yorehold, a turn-based fantasy game</p>
-        <h1>Players write the adventures.</h1>
-        <div className="hero-foot">
-          <p className="hero-line">Everyone plays by one set of rules. Pick an adventure from the library, or write your own and publish it.</p>
-          <div className="hero-get">
-            <Button href={downloadUrl()} big external>
+      <div className="home-top">
+        {top.length > 0 ? <Featured item={top[0]} /> : <Intro />}
+
+        <aside className="home-news">
+          <Section title="News">
+            <NewsList items={news.slice(0, 4)} empty="No news yet." />
+          </Section>
+          <p className="home-get">
+            <Button href={downloadUrl()} external>
               Download
             </Button>
-            <Button href="/play" tone="secondary" big>
+            <Button href="/play" tone="secondary">
               Play
             </Button>
-            <p className="hero-platform">Free. Windows for now.</p>
-          </div>
-        </div>
-      </header>
+            <span className="hero-platform">Free. Windows for now.</span>
+          </p>
+        </aside>
+      </div>
+
+      {top.length > 1 ? (
+        <Section title="Popular adventures" note="ranked by score" more={{ href: "/library?kind=adventure&sort=score", label: "All adventures" }}>
+          <PopularRow items={top.slice(1)} />
+        </Section>
+      ) : null}
 
       <nav className="figures" aria-label="In the compendium">
         {counts.map(({ kind, count }) => (
@@ -78,7 +170,7 @@ export default async function Home() {
       </nav>
 
       <div className="home-columns">
-        <Section title="Latest chapters" note={"the newest " + loaded + ", ranked by score"}>
+        <Section title="Latest chapters" note={"the newest " + loaded}>
           {latest.ok ? (
             <RankedTable
               rows={rankedRows(items)}
@@ -92,10 +184,6 @@ export default async function Home() {
         </Section>
 
         <aside className="home-side">
-          <Section title="News">
-            <NewsList items={news.slice(0, 5)} empty="No news yet." />
-          </Section>
-
           <Section title="Top writers">
             <RankList items={topWriters(items)} ranked empty="Writers show up here once their work is in the library." />
           </Section>

@@ -61,7 +61,7 @@ The keys are only read by server code and never reach the browser.
 
 | Address | What is there |
 |---|---|
-| `/` | A picture with the headline, Download and Play, a row of counts of what is in the compendium, then the newest 50 pieces of content as a ranked table (25 shown, filter chips by kind, columns that sort, click a row to open it). Beside it the news and the top writers |
+| `/` | The top adventure by score on a picture, with the news, Download and Play beside it; the next four popular adventures as a row of pictures; a row of counts of what is in the compendium; then the newest 50 pieces of content as a ranked table (25 shown, filter chips by kind, columns that sort, click a row to open it) with the top writers beside it. With an empty library the picture shows the game's headline instead |
 | `/library` | Search by text, kind, tag and level range, sorted by score, newest or name, with paging. Driven by the query string: `?q=&kind=&tag=&min=&max=&sort=&cursor=`. The page it gets is shown as a table that can be filtered and sorted in place, with the picked entry beside it |
 | `/compendium/<kind>` | The game's chapters, creatures, items, spells and classes as a filterable table with a stat block beside it; skins is an empty tab for now |
 | `/compendium/<kind>/<id>` | The same, with that entry picked |
@@ -78,7 +78,7 @@ The keys are only read by server code and never reach the browser.
 | `/status` | Whether the game server answers, and how fast |
 | `/site-rules`, `/terms`, `/privacy` | Placeholders: the text is not written yet |
 
-The top bar has four headings, split by who is reading: Rules, Players, Designers and Community. Pointing at one opens the list of everything under it; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
+The top bar has Home and four headings, split by who is reading: Rules, Players, Designers and Community. They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
 
 ## Layout
 
