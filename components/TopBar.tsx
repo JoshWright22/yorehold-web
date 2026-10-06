@@ -18,13 +18,15 @@ interface Entry {
   note: string;
 }
 
-// Split by who is reading: the rules everyone plays by, what a player looks things up in, and
+// Split by who is reading: the one set of rules everyone plays by, what a player looks things up in, and
 // what someone writing content needs. Pressing a heading goes to its first entry.
 const groups: { label: string; entries: Entry[] }[] = [
   {
     label: "Rules",
     entries: [
-      { href: "/library?kind=ruleset", label: "Rulesets", note: "Shared and house rules" },
+      { href: "/compendium/classes", label: "Classes", note: "Features level by level" },
+      { href: "/compendium/spells", label: "Spells", note: "Every spell list" },
+      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear" },
       { href: "/canon", label: "Canon", note: "What is up for review" },
     ],
   },
@@ -33,9 +35,6 @@ const groups: { label: string; entries: Entry[] }[] = [
     entries: [
       { href: "/play", label: "Play", note: "In the browser, or download" },
       { href: "/library?kind=adventure", label: "Adventures", note: "Written by players" },
-      { href: "/compendium/classes", label: "Classes", note: "Features level by level" },
-      { href: "/compendium/spells", label: "Spells", note: "Every spell list" },
-      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear" },
     ],
   },
   {

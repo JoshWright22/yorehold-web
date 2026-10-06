@@ -21,7 +21,6 @@ const popularShown = 5;
 const kindFilters = [
   { label: "All", kind: "" },
   { label: "Adventures", kind: "adventure" },
-  { label: "Rulesets", kind: "ruleset" },
   { label: "Definitions", kind: "definitions" },
 ];
 
@@ -165,7 +164,7 @@ export default async function Home() {
       {/* Left out entirely until the server counts these; an empty frame would have no job. */}
       {counted.ok ? (
         <div className="home-graphs">
-          <Section title="Writing" note="chapters, rulesets and packs published each week">
+          <Section title="Writing" note="adventures and packs published each week">
             <Graph points={counted.data.publishedWeekly} shape="bars" unit="published" pointLabel="week of" />
           </Section>
           <Section title="Players" note="different players each day">

@@ -7,6 +7,9 @@ import { sampleOn, sampleRpc } from "./sample";
 
 export type ContentKind = "adventure" | "ruleset" | "definitions";
 export const contentKinds: ContentKind[] = ["adventure", "ruleset", "definitions"];
+// Everyone plays by one set of rules, so the site offers no ruleset tab even though the server
+// still knows the kind.
+export const shownKinds: ContentKind[] = ["adventure", "definitions"];
 
 export type ContentSort = "score" | "new" | "name";
 export const contentSorts: ContentSort[] = ["score", "new", "name"];

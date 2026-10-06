@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Form from "next/form";
 import Browser from "@/components/Browser";
+import RankedTable from "@/components/RankedTable";
 import { FailureNotice } from "@/components/Notice";
 import { FilterBar, PageHead, TabBar } from "@/components/ui";
 import { first } from "@/lib/format";
-import { contentColumns, contentRow } from "@/lib/rows";
-import { contentKinds, contentSearch, contentSorts, type ContentKind, type ContentSort } from "@/lib/server";
+import { contentColumns, contentRow, rankedRows } from "@/lib/rows";
+import { contentSearch, contentSorts, shownKinds, type ContentKind, type ContentSort } from "@/lib/server";
 
 export const metadata: Metadata = { title: "Library" };
 
@@ -30,7 +32,7 @@ export default async function Library({ searchParams }: { searchParams: Promise<
   const query = await searchParams;
 
   const kindText = first(query.kind);
-  const kind = contentKinds.includes(kindText as ContentKind) ? (kindText as ContentKind) : undefined;
+  const kind = shownKinds.includes(kindText as ContentKind) ? (kindText as ContentKind) : undefined;
   const sortText = first(query.sort);
   const sort: ContentSort = contentSorts.includes(sortText as ContentSort) ? (sortText as ContentSort) : "score";
   const tag = first(query.tag).trim().toLowerCase();
@@ -58,21 +60,21 @@ export default async function Library({ searchParams }: { searchParams: Promise<
 
   const tabs = [
     { href: href({ kind: "" }), label: "All", active: !kind },
-    ...contentKinds.map((option) => ({ href: href({ kind: option }), label: kindLabels[option], active: kind === option })),
+    ...shownKinds.map((option) => ({ href: href({ kind: option }), label: kindLabels[option], active: kind === option })),
   ];
 
   return (
     <>
-      <PageHead title="Library" kicker="Made by players" art="valley">
+      <PageHead title={kind === "adventure" ? "Adventures" : "Library"} kicker="Made by players" art="valley">
         <p className="muted">
-          Adventures, rulesets and definitions shared by players. The game&apos;s own content is in the{" "}
+          {kind === "adventure" ? "Complete adventures shared by players. Chapters are parts of each adventure. " : "Adventures and definitions shared by players. "}The game&apos;s own content is in the{" "}
           <Link href="/compendium">compendium</Link>.
         </p>
       </PageHead>
 
       <TabBar tabs={tabs} label="Kinds of content" />
 
-      <form method="get" action="/library" className="search-form">
+      <Form action="/library" className="search-form">
         {kind ? <input type="hidden" name="kind" value={kind} /> : null}
         <FilterBar>
           <label className="filter-field grow">
@@ -103,16 +105,16 @@ export default async function Library({ searchParams }: { searchParams: Promise<
             Search
           </button>
         </FilterBar>
-      </form>
+      </Form>
 
       {result.ok ? (
         <>
-          <Browser
+          {kind === "adventure" ? <RankedTable rows={rankedRows(result.data.content)} limit={pageSize} empty="No adventures match that search." /> : <Browser
             rows={result.data.content.map(contentRow)}
             columns={contentColumns}
             empty="Nothing matches that search."
             placeholder="Filter this page"
-          />
+          />}
           <nav className="pager" aria-label="Pages">
             {cursor ? <Link href={href({ cursor: "" })}>First page</Link> : <span />}
             {result.data.cursor ? <Link href={href({ cursor: result.data.cursor })}>Next page</Link> : <span />}

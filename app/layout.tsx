@@ -14,7 +14,7 @@ const code = JetBrains_Mono({ subsets: ["latin"], variable: "--font-code", displ
 
 export const metadata: Metadata = {
   title: { default: "Yorehold", template: "%s | Yorehold" },
-  description: "Adventures, rulesets and homebrew for Yorehold, made and shared by players.",
+  description: "Adventures and homebrew for Yorehold, made and shared by players.",
 };
 
 export const viewport: Viewport = {
