@@ -24,9 +24,9 @@ interface Entry {
   heading?: string;
 }
 
-// Home and the adventures, then split by who is reading: the one set of rules everyone plays
-// by, everything a player uses, and what someone writing content needs. Pressing a heading goes to
-// its first entry.
+// Home and the adventures, then the one set of rules everyone plays by, everything a player uses,
+// the compendium of the game's own content, and the community. Pressing a heading goes to its
+// first entry.
 const groups: { label: string; entries: Entry[] }[] = [
   {
     label: "Home",
@@ -59,8 +59,9 @@ const groups: { label: string; entries: Entry[] }[] = [
   {
     label: "Rules",
     entries: [
-      { href: "/compendium", label: "Compendium", note: "Every entry of the rules", exact: true },
       { href: "/canon", label: "Canon", note: "What is up for review" },
+      { href: "/faq#rules", label: "How the rules work", note: "One set for every adventure", shortcut: true },
+      { href: "/faq#rules-change", label: "When the rules change", note: "What happens to characters", shortcut: true },
     ],
   },
   {
@@ -68,19 +69,22 @@ const groups: { label: string; entries: Entry[] }[] = [
     entries: [
       { href: "/play", label: "Play", note: "In the browser, or download" },
       { href: "/characters", label: "Character creator", note: "Make one, take it into the game" },
-      { href: "/compendium/classes", label: "Classes", note: "Features level by level" },
-      { href: "/compendium/spells", label: "Spells", note: "Every spell list" },
-      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear" },
+      { href: "/compendium/classes", label: "Classes", note: "Features level by level", shortcut: true },
+      { href: "/compendium/spells", label: "Spells", note: "Every spell list", shortcut: true },
+      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear", shortcut: true },
       { href: "/account", label: "Your account", note: "Your work and completions" },
     ],
   },
   {
-    label: "Designers",
+    // The game's own content, read from its files: what players look up and designers build from.
+    label: "Compendium",
     entries: [
-      { href: "/docs", label: "Format docs", note: "How content files are written" },
-      { href: "/compendium/creatures", label: "Creatures", note: "Stat blocks and behaviour" },
-      { href: "/compendium/chapters", label: "Chapter examples", note: "Adventure parts for designers" },
-      { href: "/library?kind=definitions", label: "Definitions", note: "Homebrew packs to build on" },
+      { href: "/compendium", label: "Overview", note: "Every part at a glance", exact: true },
+      { heading: "Players", href: "/compendium/classes", label: "Classes", note: "Features level by level" },
+      { href: "/compendium/spells", label: "Spells", note: "Every spell list" },
+      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear" },
+      { heading: "Designers", href: "/compendium/creatures", label: "Creatures", note: "Stat blocks and behaviour" },
+      { href: "/compendium/chapters", label: "Chapters", note: "The game's own, as examples" },
       { href: "/compendium/skins", label: "Skins", note: "Looks for the game" },
     ],
   },
@@ -89,6 +93,7 @@ const groups: { label: string; entries: Entry[] }[] = [
     entries: [
       { href: "/library", label: "Library", note: "Everything published" },
       { href: "/contribute", label: "Contribute", note: "Write and publish your own" },
+      { href: "/docs", label: "Format docs", note: "How content files are written" },
       { href: "/login?mode=signup", label: "Join the site", note: "Make an account" },
       { href: "/site-rules", label: "Site rules", note: "What is and isn't allowed" },
       { href: "/forums", label: "Forums", note: "Not open yet" },

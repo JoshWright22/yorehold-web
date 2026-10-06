@@ -87,7 +87,7 @@ The keys are only read by server code and never reach the browser.
 | `/status` | Whether the game server answers, and how fast |
 | `/site-rules`, `/terms`, `/privacy` | Placeholders: the text is not written yet |
 
-The top bar has Home, then Adventures (newest, most favourited, top scored, packs, your favourites) and four headings split by who is reading: Rules, Players (everything a player uses, with the character creator), Designers and Community. They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it at once; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
+The top bar has Home (front page, news, getting started), Adventures (feeds and discovery), Rules, Players (everything a player uses, with the character creator), Compendium (every part of the game's own content) and Community (library, contributing, format docs, joining). They all stay in the bar down to a half-width window (the search box and then the name give way first); only on a phone do they fold into a menu. Pointing at one opens the list of everything under it at once; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
 
 ## Layout
 
