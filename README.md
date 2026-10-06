@@ -52,6 +52,7 @@ Set in `.env.local` (gitignored). `.env.example` lists them.
 | `YOREHOLD_SERVER` | Where the game server answers HTTP, for example `http://127.0.0.1:7350` |
 | `YOREHOLD_SERVER_HTTP_KEY` | The server's HTTP key (`HTTP_KEY` in its `.env`), for the public RPCs |
 | `YOREHOLD_SERVER_KEY` | The server's client key (`SERVER_KEY` in its `.env`), for signing in and signing up |
+| `YOREHOLD_SAMPLE` | `1` shows made-up library content (`lib/sample.ts`) whenever the server cannot be reached; for local work only |
 | `YOREHOLD_DOWNLOAD_URL` | Where the game download lives (optional; defaults to the game's releases page) |
 
 The keys are only read by server code and never reach the browser.

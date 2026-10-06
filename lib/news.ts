@@ -28,4 +28,21 @@ export const news: NewsItem[] = [
     line: "Browse what players have published, vote on it and sign in by email.",
     href: "/library",
   },
+  {
+    title: "Server status page",
+    day: "2026-10-02",
+    line: "Whether the game server answers, and how fast.",
+    href: "/status",
+  },
+  {
+    title: "Moving the game to a new engine",
+    day: "2026-09-28",
+    line: "The client is being rebuilt; chapters and saves carry over.",
+  },
+  {
+    title: "Writing your first chapter",
+    day: "2026-09-21",
+    line: "Rooms, creatures and dialogue are plain files. The format docs walk through one.",
+    href: "/docs",
+  },
 ];

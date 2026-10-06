@@ -3,6 +3,8 @@
 //
 // Server only: it reads the keys from the environment. Do not import it from a client component.
 
+import { sampleOn, sampleRpc } from "./sample";
+
 export type ContentKind = "adventure" | "ruleset" | "definitions";
 export const contentKinds: ContentKind[] = ["adventure", "ruleset", "definitions"];
 
@@ -211,8 +213,19 @@ async function send<T>(path: string, init: RequestInit): Promise<Result<T>> {
 }
 
 // Calls an RPC. With a session token the caller is that user; without one the call is made with
-// the server's HTTP key and is anonymous.
+// the server's HTTP key and is anonymous. With YOREHOLD_SAMPLE=1 an unreachable server answers
+// from lib/sample.ts instead, for working on the pages locally.
 async function rpc<T>(id: string, payload: object, token?: string): Promise<Result<T>> {
+  const result = await rpcLive<T>(id, payload, token);
+  if (result.ok || !result.offline || !sampleOn()) return result;
+  const answer = sampleRpc(id, payload);
+  if (answer === null) {
+    return id === "content_get" ? { ok: false, offline: false, code: Codes.notFound, message: "No such content." } : result;
+  }
+  return { ok: true, data: answer as T };
+}
+
+async function rpcLive<T>(id: string, payload: object, token?: string): Promise<Result<T>> {
   const headers: Record<string, string> = { "Content-Type": "application/json", Accept: "application/json" };
   let query = "?unwrap";
   if (token) {
