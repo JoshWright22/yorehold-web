@@ -368,11 +368,9 @@ summary:focus-visible {
   gap: var(--space-2);
   list-style: none;
   cursor: pointer;
-  padding: 0.2rem var(--space-3) 0.2rem 0.2rem;
-  border-radius: var(--radius-pill);
-  background: var(--bg);
-  font-weight: 500;
-  font-size: 0.9rem;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-radius: 30%;
 }
 
 .account-menu summary::-webkit-details-marker {
@@ -381,11 +379,23 @@ summary:focus-visible {
 
 .account-menu[open] summary,
 .account-menu summary:hover {
-  background: var(--ink-3);
+  border-color: var(--paper);
 }
 
-.account-name {
-  max-width: 9rem;
+/* the picture alone sits in the bar, a little larger than the small avatar elsewhere */
+.account-menu .avatar.small {
+  width: 2.3rem;
+  height: 2.3rem;
+  font-size: 1rem;
+}
+
+.account-drop-name {
+  margin: 0;
+  padding: var(--space-1) var(--space-3) var(--space-2);
+  border-bottom: var(--border);
+  margin-bottom: var(--space-1);
+  color: var(--muted);
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -937,6 +947,11 @@ button.chip.removable {
   font-weight: 700;
   font-size: 1.5rem;
   flex: none;
+}
+
+img.avatar {
+  object-fit: cover;
+  background: var(--panel);
 }
 
 .avatar.small {
@@ -2807,6 +2822,38 @@ textarea::placeholder {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+}
+
+/* Picture and background on the account page */
+.look-form {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+  background: var(--panel);
+  border: var(--border);
+  border-radius: var(--radius);
+}
+
+.look-form h2 {
+  margin: 0 0 var(--space-3);
+  font-size: 1.1rem;
+}
+
+.look-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.look-picker label {
+  cursor: pointer;
+}
+
+.look-note {
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.8rem;
 }
 
 /* Docs */

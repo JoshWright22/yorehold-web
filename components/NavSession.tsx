@@ -4,6 +4,7 @@
 // the layout itself reads no cookie and the placeholder and docs pages can stay static.
 
 import Link from "next/link";
+import { Avatar } from "./Appearance";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -57,13 +58,12 @@ export default function NavSession() {
   return (
     <div className="nav-session">
       <details className="account-menu" ref={menuRef}>
-        <summary>
-          <span className="avatar small" aria-hidden="true">
-            {name[0]?.toUpperCase()}
-          </span>
-          <span className="account-name">{name}</span>
+        <summary title={name}>
+          <Avatar userId={user.id} name={name} size="small" />
+          <span className="sr-only">{name}</span>
         </summary>
         <div className="account-drop">
+          <p className="account-drop-name">{name}</p>
           <Link href="/account">Account</Link>
           <Link href={profile}>Public profile</Link>
           <form action="/logout" method="post">

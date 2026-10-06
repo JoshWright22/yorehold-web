@@ -87,6 +87,7 @@ export default async function Profile({ params, searchParams }: Props) {
   return (
     <>
       <ProfileHead
+        userId={userId}
         name={shownName}
         kicker="Writer"
         tiles={[

@@ -3,7 +3,7 @@
 //
 // Server only: it reads the keys from the environment. Do not import it from a client component.
 
-import { sampleOn, sampleRpc } from "./sample";
+import { sampleOn, sampleRpc, sampleSignIn } from "./sample";
 
 export type ContentKind = "adventure" | "ruleset" | "definitions";
 export const contentKinds: ContentKind[] = ["adventure", "ruleset", "definitions"];
@@ -310,7 +310,14 @@ export function config(): Promise<Result<ConfigResponse>> {
 }
 
 // Sign in, or sign up when create is true, with Nakama's own email accounts.
-export function authenticateEmail(email: string, password: string, create: boolean, username?: string): Promise<Result<AuthResponse>> {
+// With YOREHOLD_SAMPLE=1 and no server, any email and password sign in to a local stand-in account.
+export async function authenticateEmail(email: string, password: string, create: boolean, username?: string): Promise<Result<AuthResponse>> {
+  const result = await authenticateLive(email, password, create, username);
+  if (result.ok || !result.offline || !sampleOn()) return result;
+  return { ok: true, data: sampleSignIn(email, username) };
+}
+
+function authenticateLive(email: string, password: string, create: boolean, username?: string): Promise<Result<AuthResponse>> {
   const key = (process.env.YOREHOLD_SERVER_KEY ?? "").trim();
   if (key === "") return Promise.resolve(offline("No server key is configured (YOREHOLD_SERVER_KEY is not set)."));
   let query = "?create=" + (create ? "true" : "false");

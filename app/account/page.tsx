@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { AppearanceForm } from "@/components/Appearance";
 import CompletionList from "@/components/CompletionList";
 import ContentList from "@/components/ContentList";
 import { FailureNotice } from "@/components/Notice";
@@ -28,6 +29,7 @@ export default async function Account() {
   return (
     <>
       <ProfileHead
+        userId={session.userId}
         name={session.name || "Your account"}
         kicker="Your account"
         tiles={[
@@ -45,6 +47,8 @@ export default async function Account() {
           </button>
         </form>
       </ProfileHead>
+
+      <AppearanceForm userId={session.userId} />
 
       <Tabs
         label="Your account"

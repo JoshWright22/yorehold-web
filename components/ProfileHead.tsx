@@ -1,14 +1,18 @@
 import type { ReactNode } from "react";
-import { artStyle, StatTile } from "./ui";
+import { Avatar, ProfileCover } from "./Appearance";
+import { StatTile } from "./ui";
 
-// The top of a profile: a cover picture, the avatar over its lower edge, the name and a row of
-// numbers. Nobody can upload art yet, so every profile gets the same picture and a letter.
+// The top of a profile: the player's background across the top, their picture over its lower
+// edge, the name and a row of numbers. Without a picture or background of their own a profile gets
+// a stock picture and a letter.
 export default function ProfileHead({
+  userId = "",
   name,
   kicker,
   tiles,
   children,
 }: {
+  userId?: string;
   name: string;
   kicker?: string;
   tiles?: { label: string; value: ReactNode; tone?: string }[];
@@ -16,11 +20,9 @@ export default function ProfileHead({
 }) {
   return (
     <header className="profile-head">
-      <div className="banner profile-banner" style={artStyle("peaks")} aria-hidden="true" />
+      <ProfileCover userId={userId} />
       <div className="profile-row">
-        <span className="avatar large" aria-hidden="true">
-          {(name.trim()[0] ?? "?").toUpperCase()}
-        </span>
+        <Avatar userId={userId} name={name} size="large" />
         <div className="profile-name">
           {kicker ? <p className="kicker">{kicker}</p> : null}
           <h1>{name}</h1>

@@ -52,7 +52,7 @@ Set in `.env.local` (gitignored). `.env.example` lists them.
 | `YOREHOLD_SERVER` | Where the game server answers HTTP, for example `http://127.0.0.1:7350` |
 | `YOREHOLD_SERVER_HTTP_KEY` | The server's HTTP key (`HTTP_KEY` in its `.env`), for the public RPCs |
 | `YOREHOLD_SERVER_KEY` | The server's client key (`SERVER_KEY` in its `.env`), for signing in and signing up |
-| `YOREHOLD_SAMPLE` | `1` shows made-up library content (`lib/sample.ts`) whenever the server cannot be reached; for local work only |
+| `YOREHOLD_SAMPLE` | `1` shows made-up library content (`lib/sample.ts`) whenever the server cannot be reached, and lets any email and password sign in to a local stand-in account; for local work only |
 | `YOREHOLD_DOWNLOAD_URL` | Where the game download lives (optional; defaults to the game's releases page) |
 
 The keys are only read by server code and never reach the browser.
@@ -72,7 +72,7 @@ The keys are only read by server code and never reach the browser.
 | `/u/<name>` | A profile: published work and completed adventures |
 | `/login` | Sign in, or sign up with `?mode=signup`, by email and password |
 | `/logout` | Signs out (POST) |
-| `/account` | The signed-in user's own name, content and completions |
+| `/account` | The signed-in user's own name, content and completions, and a form to set a picture and a profile background. Both are cut to size in the browser and kept there (`lib/appearance.ts`) until the server stores them, so for now only their owner sees them. The background runs across the top of the profile and the picture shows over it and in the top right of the bar |
 | `/play` | Placeholder for the browser build of the game, with the download link |
 | `/characters` | Character creator: name, race, class, background and ability scores (point buy, standard array or rolled) with the sheet beside them, all read from the game's ruleset files in `../yorehold-godot/assets`. Saves in the browser, or downloads the game's own character file (the format `CharacterChoices` reads) |
 | `/forums` | Placeholder: the categories, "coming soon" |

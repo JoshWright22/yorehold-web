@@ -1,7 +1,9 @@
 // Made-up library content for working on the site without a game server. Only used when
 // YOREHOLD_SAMPLE=1 is set and the server cannot be reached, so a live site never shows it.
 
+import { createHash } from "node:crypto";
 import type {
+  AuthResponse,
   Completion,
   CompletionsListResponse,
   ContentGetResponse,
@@ -12,6 +14,17 @@ import type {
   StatPoint,
   StatsResponse,
 } from "./server";
+
+// A token shaped like the server's, unsigned, naming a stand-in account. The same email always
+// gives the same account, so things kept per account in the browser are still there next time.
+export function sampleSignIn(email: string, username?: string): AuthResponse {
+  const hex = createHash("sha256").update(email.toLowerCase()).digest("hex");
+  const uid = [hex.slice(0, 8), hex.slice(8, 12), "4" + hex.slice(13, 16), "8" + hex.slice(17, 20), hex.slice(20, 32)].join("-");
+  const name = username || email.split("@")[0].replace(/[^A-Za-z0-9_.-]/g, "").slice(0, 32) || "player";
+  const part = (value: object) => Buffer.from(JSON.stringify(value)).toString("base64url");
+  const token = part({ alg: "none", typ: "JWT" }) + "." + part({ uid, usn: name, exp: Math.floor(Date.now() / 1000) + 7 * 24 * 3600 }) + ".sample";
+  return { token, refresh_token: "" };
+}
 
 export function sampleOn(): boolean {
   return (process.env.YOREHOLD_SAMPLE ?? "").trim() === "1";
