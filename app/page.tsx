@@ -132,7 +132,7 @@ export default async function Home() {
         {top.length > 0 ? <Featured item={top[0]} /> : <Intro />}
 
         <aside className="home-news">
-          <Section title="News">
+          <Section title="News" more={{ href: "/news", label: "All news" }}>
             <NewsList items={news.slice(0, 4)} empty="No news yet." />
           </Section>
           <p className="home-get">

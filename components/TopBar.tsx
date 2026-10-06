@@ -18,12 +18,24 @@ interface Entry {
   note: string;
   // Only this address, not the pages under it, counts as this entry.
   exact?: boolean;
+  // A shortcut to a page that belongs under another heading, so it never marks this one.
+  shortcut?: boolean;
 }
 
-// After Home: the adventures, then split by who is reading: the one set of rules everyone plays
+// Home and the adventures, then split by who is reading: the one set of rules everyone plays
 // by, everything a player uses, and what someone writing content needs. Pressing a heading goes to
 // its first entry.
 const groups: { label: string; entries: Entry[] }[] = [
+  {
+    label: "Home",
+    entries: [
+      { href: "/", label: "Front page", note: "Popular, news and numbers", exact: true },
+      { href: "/news", label: "News", note: "Every post, newest first" },
+      { href: "/play", label: "Download", note: "Get the game", shortcut: true },
+      { href: "/status", label: "Server status", note: "Is the game server up" },
+      { href: "/library", label: "Search", note: "Everything published", shortcut: true },
+    ],
+  },
   {
     label: "Adventures",
     entries: [
@@ -73,7 +85,7 @@ const groups: { label: string; entries: Entry[] }[] = [
 
 // An entry with a query shares its page with others, so only a plain address can claim a page.
 function claims(entry: Entry, pathname: string): boolean {
-  if (entry.href.includes("?")) return false;
+  if (entry.shortcut || entry.href.includes("?")) return false;
   return pathname === entry.href || (!entry.exact && pathname.startsWith(entry.href + "/"));
 }
 
@@ -129,16 +141,6 @@ export default function TopBar() {
         <div id="site-menu" className={open ? "top-menu open" : "top-menu"}>
           <nav aria-label="Main">
             <ul className="top-links">
-              <li className="top-group">
-                <Link
-                  href="/"
-                  className={pathname === "/" ? "top-head active" : "top-head"}
-                  aria-current={pathname === "/" ? "page" : undefined}
-                  onClick={() => pressed("")}
-                >
-                  Home
-                </Link>
-              </li>
               {groups.map((group) => {
                 const active = group.entries.some((entry) => claims(entry, pathname));
                 return (
