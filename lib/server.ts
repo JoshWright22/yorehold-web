@@ -11,9 +11,10 @@ export const contentKinds: ContentKind[] = ["adventure", "ruleset", "definitions
 // still knows the kind.
 export const shownKinds: ContentKind[] = ["adventure", "definitions"];
 
-// "favourites" needs the server to count favourites; until it does, only the sample sorts by it.
-export type ContentSort = "score" | "new" | "name" | "favourites";
-export const contentSorts: ContentSort[] = ["score", "new", "name", "favourites"];
+// "favourites", "updated" and "lowest" are newer than the server; until it learns them only the
+// sample sorts by them, and the server answers with its own default order.
+export type ContentSort = "score" | "new" | "name" | "favourites" | "updated" | "lowest";
+export const contentSorts: ContentSort[] = ["score", "new", "name", "favourites", "updated", "lowest"];
 
 export type Vote = "up" | "down" | "";
 export type VoteRequest = "up" | "down" | "clear";

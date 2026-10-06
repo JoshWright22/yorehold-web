@@ -20,6 +20,8 @@ interface Entry {
   exact?: boolean;
   // A shortcut to a page that belongs under another heading, so it never marks this one.
   shortcut?: boolean;
+  // A small heading shown above this entry, starting a part of the list.
+  heading?: string;
 }
 
 // Home and the adventures, then split by who is reading: the one set of rules everyone plays
@@ -31,18 +33,26 @@ const groups: { label: string; entries: Entry[] }[] = [
     entries: [
       { href: "/", label: "Front page", note: "Popular, news and numbers", exact: true },
       { href: "/news", label: "News", note: "Every post, newest first" },
+      { heading: "Getting started", href: "/guide", label: "Guide for newcomers", note: "From here to a first adventure" },
+      { href: "/faq", label: "FAQ", note: "Short answers" },
       { href: "/play", label: "Download", note: "Get the game", shortcut: true },
-      { href: "/status", label: "Server status", note: "Is the game server up" },
+      { heading: "Site", href: "/status", label: "Server status", note: "Is the game server up" },
       { href: "/library", label: "Search", note: "Everything published", shortcut: true },
     ],
   },
   {
     label: "Adventures",
     entries: [
-      { href: "/adventures", label: "Newest", note: "Everything, newest first" },
-      { href: "/adventures?sort=favourites", label: "Most favourited", note: "What players keep" },
+      { heading: "Feed", href: "/adventures", label: "Newest", note: "Everything, newest first" },
+      { href: "/adventures?sort=updated", label: "Recently updated", note: "New revisions" },
       { href: "/adventures?sort=score", label: "Top scored", note: "By votes" },
-      { href: "/adventures?show=definitions", label: "Packs", note: "Creatures, items and places to build on" },
+      { href: "/adventures?sort=favourites", label: "Most favourited", note: "What players keep" },
+      { href: "/adventures?sort=lowest", label: "Lowest scored", note: "Worth a second look" },
+      { heading: "Discovery", href: "/index", label: "Index", note: "Everything, by level" },
+      { href: "/tags", label: "Tag search", note: "Every tag and what carries it" },
+      { href: "/lists", label: "Curated lists", note: "Picked by hand, in order" },
+      { href: "/random?kind=adventure", label: "Random adventure", note: "Take a chance" },
+      { heading: "Also", href: "/adventures?show=definitions", label: "Packs", note: "Creatures, items and places to build on" },
       { href: "/adventures?show=fav", label: "Your favourites", note: "Kept in this browser" },
     ],
   },
@@ -78,6 +88,9 @@ const groups: { label: string; entries: Entry[] }[] = [
     label: "Community",
     entries: [
       { href: "/library", label: "Library", note: "Everything published" },
+      { href: "/contribute", label: "Contribute", note: "Write and publish your own" },
+      { href: "/login?mode=signup", label: "Join the site", note: "Make an account" },
+      { href: "/site-rules", label: "Site rules", note: "What is and isn't allowed" },
       { href: "/forums", label: "Forums", note: "Not open yet" },
     ],
   },
@@ -158,6 +171,7 @@ export default function TopBar() {
                           const current = claims(entry, pathname);
                           return (
                             <li key={entry.href}>
+                              {entry.heading ? <span className="top-drop-head">{entry.heading}</span> : null}
                               <Link href={entry.href} className={current ? "current" : undefined} aria-current={current ? "page" : undefined} onClick={() => pressed(group.label)}>
                                 {entry.label}
                                 <span className="top-note">{entry.note}</span>

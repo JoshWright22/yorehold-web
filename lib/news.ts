@@ -11,6 +11,12 @@ export interface NewsItem {
 
 export const news: NewsItem[] = [
   {
+    title: "Guide, index and tag search",
+    day: "2026-10-06",
+    line: "A guide for newcomers, an index of every adventure by level, tag search, curated lists and a random button.",
+    href: "/guide",
+  },
+  {
     title: "The compendium is up",
     day: "2026-10-05",
     line: "Chapters, creatures, items, spells and classes from the game's own files, as tables you can filter.",

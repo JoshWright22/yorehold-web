@@ -273,6 +273,20 @@ summary:focus-visible {
   white-space: nowrap;
 }
 
+.top-drop-head {
+  display: block;
+  padding: var(--space-2) var(--space-3) 0.1rem;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.top-drop li:first-child .top-drop-head {
+  padding-top: 0;
+}
+
 .top-drop a:hover,
 .top-drop a:focus-visible {
   background: var(--paper);
@@ -2827,6 +2841,191 @@ textarea::placeholder {
   max-width: 44rem;
 }
 
+/* Wiki pages: index, tags, curated lists and help. A contents box, then dense plain lists. */
+
+.index-toc {
+  display: inline-block;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background: var(--panel);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.index-toc-head {
+  margin: 0 0 var(--space-1);
+  font-weight: 700;
+}
+
+.index-toc ol {
+  margin: 0;
+  padding-left: 1.4rem;
+}
+
+.index-band {
+  margin-bottom: var(--space-5);
+}
+
+.index-band h2,
+.curated-list h2,
+.help-text h2 {
+  margin: 0 0 var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: var(--border);
+  font-size: 1.25rem;
+}
+
+.index-band h2 .num {
+  color: var(--faint);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.index-list {
+  columns: 2 26rem;
+  column-gap: var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-book);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.index-list li {
+  break-inside: avoid;
+}
+
+.index-list span {
+  color: var(--muted);
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background: var(--panel);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.tag-cloud a .num {
+  margin-left: 0.25rem;
+  color: var(--faint);
+  font-size: 0.7rem;
+}
+
+.tag-cloud-1 {
+  font-size: 0.85rem;
+}
+
+.tag-cloud-2 {
+  font-size: 1.05rem;
+}
+
+.tag-cloud-3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.tag-table {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.tag-table div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: 0.35rem 0;
+  border-bottom: var(--border-hair);
+}
+
+.tag-table dt {
+  font-weight: 600;
+}
+
+.tag-table dd {
+  margin: 0;
+  font-family: var(--font-book);
+}
+
+.curated {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  gap: var(--space-5) var(--space-6);
+}
+
+.curated-line {
+  margin: 0 0 var(--space-2);
+  color: var(--muted);
+  font-family: var(--font-book);
+  font-size: 0.9rem;
+}
+
+.curated-list ol {
+  margin: 0;
+  padding-left: 1.4rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.curated-meta {
+  margin-left: var(--space-2);
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+.help-layout {
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 46rem);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.help-layout .index-toc {
+  position: sticky;
+  top: calc(var(--bar-space) + var(--space-3));
+}
+
+.help-text {
+  font-family: var(--font-book);
+  font-size: 0.975rem;
+  line-height: 1.6;
+}
+
+.help-text section {
+  margin-bottom: var(--space-5);
+}
+
+.help-text h2 {
+  font-family: var(--font);
+}
+
+.help-text p,
+.help-text ul {
+  margin: 0 0 var(--space-3);
+}
+
+/* links in running text need a mark, or they read as plain words */
+.help-text a,
+.index-list a,
+.tag-table dd a {
+  text-decoration: underline;
+  text-decoration-color: var(--faint);
+  text-underline-offset: 2px;
+}
+
+.help-text a:hover,
+.index-list a:hover,
+.tag-table dd a:hover {
+  text-decoration-color: currentColor;
+}
+
 /* Picture and background on the account page */
 .look-form {
   margin-bottom: var(--space-5);
@@ -3030,8 +3229,18 @@ textarea::placeholder {
   .home-top,
   .home-graphs,
   .adv-grid,
-  .cc {
+  .cc,
+  .help-layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .help-layout .index-toc {
+    position: static;
+  }
+
+  .tag-table div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
   }
 
   .cc-sheet {

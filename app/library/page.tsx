@@ -100,6 +100,8 @@ export default async function Library({ searchParams }: { searchParams: Promise<
               <option value="new">Newest</option>
               <option value="name">Name</option>
               <option value="favourites">Favourites</option>
+              <option value="updated">Recently updated</option>
+              <option value="lowest">Lowest score</option>
             </select>
           </label>
           <button type="submit" className="button primary">

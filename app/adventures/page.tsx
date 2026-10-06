@@ -42,6 +42,8 @@ const sorts: { id: ContentSort; label: string }[] = [
   { id: "new", label: "Newest" },
   { id: "score", label: "Score" },
   { id: "favourites", label: "Favourites" },
+  { id: "updated", label: "Updated" },
+  { id: "lowest", label: "Lowest score" },
   { id: "name", label: "Name" },
 ];
 

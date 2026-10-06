@@ -120,7 +120,11 @@ function search(request: ContentSearchRequest): ContentSearchResponse {
         ? a.name.localeCompare(b.name)
         : sort === "favourites"
           ? (b.favourites ?? 0) - (a.favourites ?? 0)
-          : b.score - a.score,
+          : sort === "updated"
+            ? b.updatedAt - a.updatedAt
+            : sort === "lowest"
+              ? a.score - b.score
+              : b.score - a.score,
   );
   const limit = Math.min(Math.max(request.limit ?? 20, 1), 50);
   const start = Number(request.cursor ?? "0") || 0;
