@@ -1,25 +1,72 @@
 "use client";
 
-// The fixed bar at the top of every page. On a phone the links, search and account fold into a
-// menu that closes again whenever the page changes.
+// The bar at the top of every page. Each heading opens a list of everything under it when it is
+// pointed at or reached by keyboard. On a phone the headings, search and account fold into one
+// menu with every list laid open, and it closes again whenever the page changes.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import NavSession from "./NavSession";
 
-const links = [
-  { href: "/library", label: "Library" },
-  { href: "/compendium", label: "Compendium" },
-  { href: "/play", label: "Play" },
-  { href: "/forums", label: "Forums" },
-  { href: "/canon", label: "Canon" },
-  { href: "/docs", label: "Docs" },
+interface Entry {
+  href: string;
+  label: string;
+  // What the entry is, in a few words.
+  note: string;
+}
+
+// Split by who is reading: the rules everyone plays by, what a player looks things up in, and
+// what someone writing content needs. Pressing a heading goes to its first entry.
+const groups: { label: string; entries: Entry[] }[] = [
+  {
+    label: "Rules",
+    entries: [
+      { href: "/library?kind=ruleset", label: "Rulesets", note: "Shared and house rules" },
+      { href: "/canon", label: "Canon", note: "What is up for review" },
+    ],
+  },
+  {
+    label: "Players",
+    entries: [
+      { href: "/play", label: "Play", note: "In the browser, or download" },
+      { href: "/library?kind=adventure", label: "Adventures", note: "Written by players" },
+      { href: "/compendium/classes", label: "Classes", note: "Features level by level" },
+      { href: "/compendium/spells", label: "Spells", note: "Every spell list" },
+      { href: "/compendium/items", label: "Items", note: "Weapons, armour and gear" },
+    ],
+  },
+  {
+    label: "Designers",
+    entries: [
+      { href: "/docs", label: "Format docs", note: "How content files are written" },
+      { href: "/compendium/creatures", label: "Creatures", note: "Stat blocks and behaviour" },
+      { href: "/compendium/chapters", label: "Chapters", note: "The game's own, as examples" },
+      { href: "/library?kind=definitions", label: "Definitions", note: "Homebrew packs to build on" },
+      { href: "/compendium/skins", label: "Skins", note: "Looks for the game" },
+    ],
+  },
+  {
+    label: "Community",
+    entries: [
+      { href: "/library", label: "Library", note: "Everything published" },
+      { href: "/forums", label: "Forums", note: "Not open yet" },
+    ],
+  },
 ];
+
+// An entry with a query shares its page with others, so only a plain address can claim a page.
+function claims(entry: Entry, pathname: string): boolean {
+  if (entry.href.includes("?")) return false;
+  return pathname === entry.href || pathname.startsWith(entry.href + "/");
+}
 
 export default function TopBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  // After an entry is pressed the lists stay shut until the pointer leaves the bar, so the one
+  // just used does not hang over the new page.
+  const [shut, setShut] = useState(false);
   const [lastPath, setLastPath] = useState(pathname);
 
   // Close the menu after moving to another page.
@@ -36,6 +83,13 @@ export default function TopBar() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  function pressed() {
+    setShut(true);
+    setOpen(false);
+    // Focus would hold the list open just as the pointer does.
+    (document.activeElement as HTMLElement | null)?.blur();
+  }
 
   return (
     <header className="top-bar">
@@ -57,15 +111,30 @@ export default function TopBar() {
           <span className="burger" aria-hidden="true" />
         </button>
         <div id="site-menu" className={open ? "top-menu open" : "top-menu"}>
-          <nav aria-label="Main">
-            <ul className="top-links">
-              {links.map((link) => {
-                const active = pathname === link.href || pathname.startsWith(link.href + "/");
+          <nav aria-label="Main" onMouseLeave={() => setShut(false)}>
+            <ul className={shut ? "top-links shut" : "top-links"}>
+              {groups.map((group) => {
+                const active = group.entries.some((entry) => claims(entry, pathname));
                 return (
-                  <li key={link.href}>
-                    <Link href={link.href} className={active ? "active" : undefined} aria-current={active ? "page" : undefined}>
-                      {link.label}
+                  <li key={group.label} className="top-group">
+                    <Link href={group.entries[0].href} className={active ? "top-head active" : "top-head"} onClick={pressed}>
+                      {group.label}
                     </Link>
+                    <div className="top-drop">
+                      <ul aria-label={group.label}>
+                        {group.entries.map((entry) => {
+                          const current = claims(entry, pathname);
+                          return (
+                            <li key={entry.href}>
+                              <Link href={entry.href} className={current ? "current" : undefined} aria-current={current ? "page" : undefined} onClick={pressed}>
+                                {entry.label}
+                                <span className="top-note">{entry.note}</span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
                   </li>
                 );
               })}

@@ -74,6 +74,10 @@ The keys are only read by server code and never reach the browser.
 | `/forums` | Placeholder: the categories, "coming soon" |
 | `/canon` | Placeholder for the review queue |
 | `/docs` | The format docs from the game and framework repos |
+| `/status` | Whether the game server answers, and how fast |
+| `/site-rules`, `/terms`, `/privacy` | Placeholders: the text is not written yet |
+
+The top bar has four headings, split by who is reading: Rules, Players, Designers and Community. Pointing at one opens the list of everything under it; the lists are in `components/TopBar.tsx`. The footer is one line of links (`components/SiteFooter.tsx`).
 
 ## Layout
 

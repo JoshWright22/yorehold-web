@@ -229,7 +229,11 @@ summary:focus-visible {
   padding: 0;
 }
 
-.top-links a {
+.top-group {
+  position: relative;
+}
+
+.top-head {
   display: block;
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius-pill);
@@ -239,15 +243,95 @@ summary:focus-visible {
   transition: background var(--quick) var(--ease), color var(--quick) var(--ease);
 }
 
-.top-links a:hover {
+.top-head:hover,
+.top-group:hover .top-head,
+.top-group:focus-within .top-head {
   color: var(--text);
   text-decoration: none;
   background: var(--ink-3);
 }
 
-.top-links a.active {
+.top-head.active,
+.top-group:hover .top-head.active,
+.top-group:focus-within .top-head.active {
   color: var(--ink-1);
   background: var(--paper);
+}
+
+/* The list under a heading. Its top padding bridges the gap to the bar, so the pointer can
+   cross from one to the other without the list closing. */
+.top-drop {
+  position: absolute;
+  left: -0.4rem;
+  top: 100%;
+  padding-top: 0.9rem;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity var(--quick) var(--ease), transform var(--quick) var(--ease), visibility 0s var(--quick);
+}
+
+.top-group:hover .top-drop,
+.top-group:focus-within .top-drop {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.top-links.shut .top-drop {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.top-drop ul {
+  list-style: none;
+  min-width: 17rem;
+  margin: 0;
+  padding: var(--space-2);
+  background: var(--panel);
+  border: var(--border);
+  border-radius: var(--radius);
+}
+
+.top-drop a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: 0.45rem var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.top-drop a:hover,
+.top-drop a:focus-visible {
+  background: var(--paper);
+  color: var(--ink-1);
+  text-decoration: none;
+}
+
+.top-drop a.current {
+  color: var(--accent);
+}
+
+.top-drop a.current:hover {
+  color: var(--ink-1);
+}
+
+.top-note {
+  color: var(--faint);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.top-drop a:hover .top-note,
+.top-drop a:focus-visible .top-note {
+  color: var(--ink-soft);
 }
 
 .top-search input {
@@ -478,62 +562,81 @@ summary:focus-visible {
   font-size: 1.15rem;
 }
 
-/* Footer: links over the name set as wide as the page */
+/* Footer: one line of the few links every page needs, and the name under it */
 
 .site-footer {
   margin-top: var(--space-7);
+  padding: var(--space-5) var(--space-4) var(--space-6);
   border-top: var(--border);
-  color: var(--muted);
-  font-size: 0.9rem;
-  overflow: hidden;
+  text-align: center;
+  font-size: 0.875rem;
 }
 
-.footer-inner {
-  max-width: var(--page-width);
-  margin: 0 auto;
-  padding: var(--space-7) var(--space-4) 0;
-  display: grid;
-  grid-template-columns: 2fr repeat(4, 1fr);
-  gap: var(--space-5);
-}
-
-.footer-brand p {
-  max-width: 18rem;
-}
-
-.footer-column h2 {
-  margin: 0 0 var(--space-3);
-  color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.footer-column ul {
+.site-footer ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1) var(--space-5);
   list-style: none;
-  margin: 0;
+  margin: 0 0 var(--space-2);
   padding: 0;
-  display: grid;
-  gap: var(--space-2);
 }
 
-.footer-column a {
+.site-footer a {
+  color: var(--muted);
+}
+
+.site-footer a:hover {
   color: var(--text);
 }
 
-.footer-word {
-  max-width: var(--page-width);
-  margin: var(--space-6) auto -0.17em;
-  padding: 0 var(--space-4);
-  color: var(--ink-3);
-  font-size: clamp(4.5rem, 21vw, 21rem);
-  font-weight: 700;
-  letter-spacing: -0.06em;
-  line-height: 0.8;
+.site-footer p {
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+
+/* Server status: one line per thing that can be up or down */
+
+.status-table {
+  width: 100%;
+  max-width: 46rem;
+  border-collapse: collapse;
+  border-top: var(--border);
+}
+
+.status-table th,
+.status-table td {
+  padding: var(--space-3) var(--space-4) var(--space-3) 0;
+  border-bottom: var(--border);
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.status-table th {
+  width: 9rem;
+  font-weight: 600;
+}
+
+.status-table td:nth-child(2) {
+  width: 5.5rem;
   white-space: nowrap;
-  user-select: none;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+}
+
+.status-dot.up {
+  background: var(--good);
+}
+
+.status-dot.down {
+  background: var(--bad);
 }
 
 /* Buttons: round, flat, and they swap inks when pointed at */
@@ -2139,12 +2242,44 @@ textarea::placeholder {
     flex-direction: column;
   }
 
-  .top-links a {
-    padding: var(--space-2) var(--space-3);
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    color: var(--text);
+  /* every list lies open under its heading; there is nothing to point at on a phone */
+  .top-links {
+    gap: var(--space-3);
+    max-height: calc(100vh - var(--bar-space) - 12rem);
+    overflow-y: auto;
+  }
+
+  .top-head,
+  .top-head.active,
+  .top-group:hover .top-head,
+  .top-group:focus-within .top-head {
+    padding: 0 var(--space-3);
+    background: none;
+    color: var(--faint);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .top-drop,
+  .top-links.shut .top-drop {
+    position: static;
+    padding-top: var(--space-1);
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  .top-drop ul {
+    min-width: 0;
+    padding: 0;
+    background: none;
+    border: none;
+  }
+
+  .top-drop a {
+    font-size: 1.15rem;
   }
 
   .top-search input,
@@ -2195,14 +2330,6 @@ textarea::placeholder {
 
   .ranked-table th {
     position: static;
-  }
-
-  .footer-inner {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .footer-brand {
-    grid-column: 1 / -1;
   }
 
   .forum-list li {

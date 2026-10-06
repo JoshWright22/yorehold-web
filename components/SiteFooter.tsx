@@ -1,67 +1,31 @@
 import Link from "next/link";
 
-const columns = [
-  {
-    title: "Play",
-    links: [
-      { href: "/play", label: "Play in the browser" },
-      { href: "/library", label: "Find an adventure" },
-    ],
-  },
-  {
-    title: "Browse",
-    links: [
-      { href: "/library", label: "Library" },
-      { href: "/compendium", label: "Compendium" },
-      { href: "/canon", label: "Canon" },
-    ],
-  },
-  {
-    title: "Make",
-    links: [
-      { href: "/docs", label: "Format docs" },
-      { href: "/forums", label: "Forums" },
-    ],
-  },
-  {
-    title: "Account",
-    links: [
-      { href: "/login", label: "Sign in" },
-      { href: "/login?mode=signup", label: "Create an account" },
-      { href: "/account", label: "Your account" },
-    ],
-  },
+// Only what a visitor might need from any page and cannot reach from the top bar.
+const links = [
+  { href: "/site-rules", label: "Site rules" },
+  { href: "/terms", label: "Terms" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/status", label: "Server status" },
+  { href: "https://github.com/JoshWright22/yorehold", label: "Source code" },
 ];
 
 export default function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="footer-inner">
-        <div className="footer-brand">
-          <p className="brand">
-            <span className="brand-mark" aria-hidden="true">
-              Y
-            </span>
-            Yorehold
-          </p>
-          <p className="muted">Everything here is made by players and free to play.</p>
-        </div>
-        {columns.map((column) => (
-          <nav key={column.title} className="footer-column" aria-label={column.title}>
-            <h2>{column.title}</h2>
-            <ul>
-              {column.links.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+      <ul>
+        {links.map((link) => (
+          <li key={link.href}>
+            {link.href.startsWith("/") ? (
+              <Link href={link.href}>{link.label}</Link>
+            ) : (
+              <a href={link.href} rel="noopener noreferrer">
+                {link.label}
+              </a>
+            )}
+          </li>
         ))}
-      </div>
-      <p className="footer-word" aria-hidden="true">
-        Yorehold
-      </p>
+      </ul>
+      <p>Yorehold 2026</p>
     </footer>
   );
 }
