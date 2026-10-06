@@ -120,6 +120,19 @@ export interface ReportResponse {
 
 export type ConfigResponse = { [key: string]: unknown };
 
+export interface StatPoint {
+  // The first day the point covers, as YYYY-MM-DD.
+  day: string;
+  value: number;
+}
+
+export interface StatsResponse {
+  // Content published in each of the last weeks, oldest first.
+  publishedWeekly: StatPoint[];
+  // Different players who played on each of the last days, oldest first.
+  playersDaily: StatPoint[];
+}
+
 export interface AuthResponse {
   token: string;
   refresh_token: string;
@@ -279,6 +292,11 @@ export function completionsList(userId: string, limit = 50, cursor = ""): Promis
 
 export function report(kind: ReportKind, id: string, reason: string, token: string): Promise<Result<ReportResponse>> {
   return rpc<ReportResponse>("report", { kind, id, reason }, token);
+}
+
+// Not on the server yet; until it is, the home page graphs show only with YOREHOLD_SAMPLE=1.
+export function stats(): Promise<Result<StatsResponse>> {
+  return rpc<StatsResponse>("stats", {});
 }
 
 export function config(): Promise<Result<ConfigResponse>> {

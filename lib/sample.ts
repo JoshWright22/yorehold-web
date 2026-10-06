@@ -9,6 +9,8 @@ import type {
   ContentKind,
   ContentSearchRequest,
   ContentSearchResponse,
+  StatPoint,
+  StatsResponse,
 } from "./server";
 
 export function sampleOn(): boolean {
@@ -125,6 +127,32 @@ function completions(userId: string): CompletionsListResponse {
   return { userId, completions: list, cursor: "" };
 }
 
+function dayString(ms: number): string {
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
+// A slow climb with weekend bumps and a jump after the library opened, so the graphs have a shape.
+function stats(): StatsResponse {
+  const weeks = 16;
+  const publishedWeekly: StatPoint[] = [];
+  for (let i = 0; i < weeks; i++) {
+    const ago = weeks - 1 - i;
+    const value = Math.round(2 + i * 1.1 + ((i * 7) % 5) + (ago < 3 ? 6 : 0));
+    publishedWeekly.push({ day: dayString(today - (ago * 7 + 6) * day), value });
+  }
+  const days = 60;
+  const playersDaily: StatPoint[] = [];
+  for (let i = 0; i < days; i++) {
+    const at = today - (days - 1 - i) * day;
+    const weekday = new Date(at).getUTCDay();
+    const weekend = weekday === 0 || weekday === 6 ? 1.35 : 1;
+    const wobble = 1 + (((i * 37) % 11) - 5) / 50;
+    const value = Math.round((140 + i * 6.5 + (i > 45 ? 120 : 0)) * weekend * wobble);
+    playersDaily.push({ day: dayString(at), value });
+  }
+  return { publishedWeekly, playersDaily };
+}
+
 // The answer the server would give to an RPC, or null for one the sample does not cover.
 export function sampleRpc(id: string, payload: object): unknown {
   const body = payload as Record<string, unknown>;
@@ -137,6 +165,8 @@ export function sampleRpc(id: string, payload: object): unknown {
     }
     case "completions_list":
       return completions(String(body.userId ?? ""));
+    case "stats":
+      return stats();
     // config is left out on purpose: the status page asks it to learn whether the server is up.
     default:
       return null;

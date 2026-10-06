@@ -6,7 +6,8 @@ import { compendiumKinds, loadKind } from "@/lib/compendium";
 import { levelRange, profileHref, score } from "@/lib/format";
 import { news } from "@/lib/news";
 import { rankedRows } from "@/lib/rows";
-import { contentSearch, downloadUrl, type ContentItem } from "@/lib/server";
+import { contentSearch, downloadUrl, stats, type ContentItem } from "@/lib/server";
+import Graph from "@/components/Graph";
 
 // Asked of the server on every visit, never baked in at build time.
 export const dynamic = "force-dynamic";
@@ -124,9 +125,10 @@ function PopularRow({ items }: { items: ContentItem[] }) {
 }
 
 export default async function Home() {
-  const [popular, latest, counts] = await Promise.all([
+  const [popular, latest, counted, counts] = await Promise.all([
     contentSearch({ kind: "adventure", sort: "score", limit: popularShown }),
     contentSearch({ sort: "new", limit: loaded }),
+    stats(),
     Promise.all(compendiumKinds.map(async (kind) => ({ kind, count: (await loadKind(kind.id)).length }))),
   ]);
 
@@ -158,6 +160,18 @@ export default async function Home() {
         <Section title="Popular adventures" note="ranked by score" more={{ href: "/library?kind=adventure&sort=score", label: "All adventures" }}>
           <PopularRow items={top.slice(1)} />
         </Section>
+      ) : null}
+
+      {/* Left out entirely until the server counts these; an empty frame would have no job. */}
+      {counted.ok ? (
+        <div className="home-graphs">
+          <Section title="Writing" note="chapters, rulesets and packs published each week">
+            <Graph points={counted.data.publishedWeekly} shape="bars" unit="published" pointLabel="week of" />
+          </Section>
+          <Section title="Players" note="different players each day">
+            <Graph points={counted.data.playersDaily} shape="line" unit="players" pointLabel="on" />
+          </Section>
+        </div>
       ) : null}
 
       <nav className="figures" aria-label="In the compendium">
